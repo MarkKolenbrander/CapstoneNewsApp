@@ -16,74 +16,70 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-//        binding.tvArticle1.text = articles[0].title
+        makingTextViewsWithDefaultValues(source, articles)
+    }
 
+//    private fun makingTextViews(){
+//        val mainGroup = binding.llMain
+//        var count = 0
+//        for (text in mainGroup.children){
+//            if (text is TextView){
+//
+//                val content = (
+//                        source[count].name + "\n" +
+//                                if (articles[count].author != null){
+//                                    articles[count].author
+//                                }else {"...UNKNOWN..."} + "\n" +
+//                                articles[count].title
+//                        )
+//                text.text = content
+//                count ++
+//            }
+//        }
+//    }
+
+    private fun makingTextViewsWithDefaultValues(sourceData: ArrayList<Source>, articleData: ArrayList<Article>){
         val mainGroup = binding.llMain
-
         var count = 0
-        for (i in mainGroup.children){
-            if (i is TextView){
+        for (text in mainGroup.children){
+            if (text is TextView){
 
-                val content = (articles[count].author ?: "...") + "\n"+
-                        articles[count].title + "\n" +
-                        (articles[count].description ?: "...") + "\n"+
-                        articles[count].url + "\n"+
-                        (articles[count].urlToImage ?: "...") + "\n"+
-                        articles[count].publishedAt + "\n"+
-                        articles[count].content
-
-                i.text = content
+                val content = (
+                        sourceData[count].name + "\n" +
+                                if (articleData[count].author != null){
+                                    articleData[count].author
+                                }else {"...UNKNOWN..."} + "\n" +
+                                articleData[count].title
+                        )
+                text.text = content
                 count ++
             }
         }
     }
 
+//    var articlesMap = mutableMapOf<String, MutableList<Article>>()
+
 
     private val source = arrayListOf(
         Source(
             "abc-news",
-            "ABC News",
-            "Your trusted source for breaking news, analysis, exclusive interviews, headlines, and videos at ABCNews.com.",
-            "https://abcnews.go.com",
-            "general",
-            "en",
-            "us"
+            "ABC News"
         ),
         Source(
             "ars-technica",
-            "Ars Technica",
-            "The PC enthusiast's resource. Power users and the tools they love, without computing religion.",
-            "http://arstechnica.com",
-            "technology",
-            "en",
-            "us"
+            "Ars Technica"
         ),
         Source(
             "axios",
-            "Axios",
-            "Axios are a new media company delivering vital, trustworthy news and analysis in the most efficient, illuminating and shareable ways possible.",
-            "https://www.axios.com",
-            "general",
-            "en",
-            "us"
+            "Axios"
         ),
         Source(
             "australian-financial-review",
-            "Australian Financial Review",
-            "The Australian Financial Review reports the latest news from business, finance, investment and politics, updated in real time. It has a reputation for independent, award-winning journalism and is essential reading for the business and investor community.",
-            "http://www.afr.com",
-            "business",
-            "en",
-            "au"
+            "Australian Financial Review"
         ),
         Source(
-            "bloomberg",
-            "Bloomberg",
-            "Bloomberg delivers business and markets news, data, analysis, and video to the world, featuring stories from Businessweek and Bloomberg News.",
-            "http://www.bloomberg.com",
-            "business",
-            "en",
-            "us"
+            null,
+            "Bloomberg"
         )
     )
 
@@ -134,4 +130,5 @@ class MainActivity : AppCompatActivity() {
             "Die Modell-Politik von Tesla lädt weiter zum Rätseln ein. Nachdem in den USA vor kurzem die Auswahl beim Model 3 auf nur noch zwei Versionen (Basis und Performance) eingeschränkt wurde, wird sie beim… [+2797 chars]"
         )
     )
+
 }
