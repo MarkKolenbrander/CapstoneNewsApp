@@ -9,6 +9,7 @@ import com.markkolenbrander.capstonenewsapp.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val articlesCollection = mutableMapOf<String, MutableList<String?>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,49 +17,48 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        makingTextViewsWithDefaultValues(source, articles)
+        addArticles()
+        makingTextViews(articlesCollection)
+
     }
 
-//    private fun makingTextViews(){
-//        val mainGroup = binding.llMain
-//        var count = 0
-//        for (text in mainGroup.children){
-//            if (text is TextView){
-//
-//                val content = (
-//                        source[count].name + "\n" +
-//                                if (articles[count].author != null){
-//                                    articles[count].author
-//                                }else {"...UNKNOWN..."} + "\n" +
-//                                articles[count].title
-//                        )
-//                text.text = content
-//                count ++
-//            }
-//        }
-//    }
+    private fun addArticles(){
+        articlesCollection["author"] = mutableListOf(
+            "n-tv NACHRICHTEN-1", "finanzen.net Redaktion", null , "Michael Bassewitz", "Sascha Mattke"
+        )
+        articlesCollection["title"] = mutableListOf(
+            "14:00 Aktienkurs von Softwarekonzern geht durch die Decke - n-tv NACHRICHTEN",
+            "US-Inflation hat Höhepunkt erreicht: Jim Cramer sieht das Paradies für Aktien kommen - finanzen.net",
+            "Theion: Fragwürdige Wunderakkus aus Berlin - Golem.de - Golem.de",
+            "„Weich-Währung“: Experten schlagen wegen Euro-Absturz Alarm - BILD",
+            "Tesla Model Y jetzt als Basis-Version für Europa bestellbar, Produktion in China (aktualisiert) - TeslaMag.de"
+        )
+        articlesCollection["sourceName"] = mutableListOf(
+            "ABC News",
+            "Ars Technica",
+            "Axios",
+            "Australian Financial Review",
+            "Bloomberg"
+        )
+    }
 
-    private fun makingTextViewsWithDefaultValues(sourceData: ArrayList<Source>, articleData: ArrayList<Article>){
+    private fun makingTextViews(articles: MutableMap<String, MutableList<String?>>){
+
         val mainGroup = binding.llMain
         var count = 0
         for (text in mainGroup.children){
             if (text is TextView){
 
                 val content = (
-                        sourceData[count].name + "\n" +
-                                if (articleData[count].author != null){
-                                    articleData[count].author
-                                }else {"...UNKNOWN..."} + "\n" +
-                                articleData[count].title
+                        (articles["author"]?.get(count) ?: "...") + "\n" +
+                                (articles["title"]?.get(count) ?: "...") + "\n" +
+                                (articles["sourceName"]?.get(count) ?: "...")
                         )
                 text.text = content
                 count ++
             }
         }
     }
-
-//    var articlesMap = mutableMapOf<String, MutableList<Article>>()
-
 
     private val source = arrayListOf(
         Source(
