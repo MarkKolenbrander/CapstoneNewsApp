@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity() {
 
         addArticles()
         makingTextViews(articlesCollection)
-
     }
 
     private fun addArticles(){
@@ -50,9 +49,11 @@ class MainActivity : AppCompatActivity() {
             if (text is TextView){
 
                 val content = (
-                        (articles["author"]?.get(count) ?: "...") + "\n" +
-                                (articles["title"]?.get(count) ?: "...") + "\n" +
-                                (articles["sourceName"]?.get(count) ?: "...")
+                        if (articles["author"]?.get(count) != null) {
+                            articles["author"]?.get(count) + "\n"
+                        }else {"...UNKNOWN..." + "\n"} +
+                                articles["title"]?.get(count) + "\n" +
+                                articles["sourceName"]?.get(count)
                         )
                 text.text = content
                 count ++
@@ -60,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // I leave this hardcoded List's just in case we have to use them later on
     private val source = arrayListOf(
         Source(
             "abc-news",
