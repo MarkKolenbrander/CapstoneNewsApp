@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.core.view.children
 import com.markkolenbrander.capstonenewsapp.databinding.ActivityMainBinding
+import com.markkolenbrander.capstonenewsapp.models.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,28 +66,70 @@ class MainActivity : AppCompatActivity() {
     private val source = arrayListOf(
         Source(
             "abc-news",
-            "ABC News"
+            "ABC News",
+            "Your trusted source for breaking news, analysis, " +
+                    "exclusive interviews, headlines, and videos at ABCNews.com.",
+            "https://abcnews.go.com",
+            category = Category.GENERAL,
+            language = Language.EN,
+            country = Country.US,
         ),
         Source(
             "ars-technica",
-            "Ars Technica"
+            "Ars Technica",
+            "The PC enthusiast's resource. Power users and the tools they love, " +
+                    "without computing religion.",
+            "http://arstechnica.com",
+            category = Category.TECHNOLOGY,
+            language = Language.EN,
+            country = Country.US,
         ),
         Source(
             "axios",
-            "Axios"
+            "Axios",
+            "Axios are a new media company delivering vital, " +
+                    "trustworthy news and analysis in the most efficient, " +
+                    "illuminating and shareable ways possible.",
+            "https://www.axios.com",
+            category = Category.GENERAL,
+            language = Language.EN,
+            country = Country.US,
         ),
         Source(
             "australian-financial-review",
-            "Australian Financial Review"
+            "Australian Financial Review",
+            "The Australian Financial Review reports the latest news from business, " +
+                    "finance, investment and politics, updated in real time. " +
+                    "It has a reputation for independent, award-winning journalism and is " +
+                    "essential reading for the business and investor community.",
+            "http://www.afr.com",
+            category = Category.BUSINESS,
+            language = Language.EN,
+            country = Country.AU
         ),
         Source(
-            null,
-            "Bloomberg"
+            "bloomberg",
+            "Bloomberg",
+            "Bloomberg delivers business and markets news, data, analysis, " +
+                    "and video to the world, featuring stories from Businessweek and " +
+                    "Bloomberg News.",
+            "http://www.bloomberg.com",
+            category = Category.BUSINESS,
+            language = Language.EN,
+            country = Country.US,
         )
     )
 
     private val articles = arrayListOf(
         Article(
+            Source(
+                id = source[0].id,
+                name = source[0].name,
+                description = source[0].description,
+                url = source[0].url,
+                category = source[0].category,
+                language = source[0].language,
+                country = source[0].country),
             "n-tv NACHRICHTEN-1",
             "14:00 Aktienkurs von Softwarekonzern geht durch die Decke - n-tv NACHRICHTEN",
             "Der Börsen-Tag",
@@ -96,6 +139,14 @@ class MainActivity : AppCompatActivity() {
             "Energiekrise und Inflation in Deutschland drücken die Konsumstimmung auf ein Rekordtief. Das Barometer der Nürnberger GfK-Marktforscher signalisiert für September einen überraschend starken Rückgang … [+2007 chars]"
         ),
         Article(
+            Source(
+                id = source[1].id,
+                name = source[1].name,
+                description = source[1].description,
+                url = source[1].url,
+                category = source[1].category,
+                language = source[1].language,
+                country = source[1].country),
             "finanzen.net Redaktion",
             "US-Inflation hat Höhepunkt erreicht: Jim Cramer sieht das Paradies für Aktien kommen - finanzen.net",
             "In den USA hat sich die Dynamik des Anstiegs der Verbraucherpreise im Juli abgeschwächt. Für Börsenexperte Jim Cramer ist damit eindeutig, dass die Inflation ihren Höhepunkt erreicht hat. Auf viele Aktien sieht er nun goldene Zeiten zukommen.",
@@ -105,6 +156,14 @@ class MainActivity : AppCompatActivity() {
             "Preisauftrieb in den USA hat im Juli etwas nachgelassenJim Cramer: \\\"Peak Inflation\\\" ist unbestreitbarNirwana für Aktien erreicht\\r\\nDie Dynamik des Preisanstiegs hat in den USA im Juli stärker nachgela… [+2760 chars]"
         ),
         Article(
+            Source(
+                id = source[2].id,
+                name = source[2].name,
+                description = source[2].description,
+                url = source[2].url,
+                category = source[2].category,
+                language = source[2].language,
+                country = source[2].country),
             null,
             "Theion: Fragwürdige Wunderakkus aus Berlin - Golem.de - Golem.de",
             null,
@@ -114,6 +173,14 @@ class MainActivity : AppCompatActivity() {
             "Besuchen Sie Golem.de wie gewohnt mit Werbung und Tracking, indem Sie der Nutzung aller Cookies zustimmen.\\r\\n Details zum Tracking finden Sie im Privacy Center.\\r\\nSkript wurde nicht geladen. Informatio… [+575 chars]"
         ),
         Article(
+            Source(
+                id = source[3].id,
+                name = source[3].name,
+                description = source[3].description,
+                url = source[3].url,
+                category = source[3].category,
+                language = source[3].language,
+                country = source[3].country),
             "Michael Bassewitz",
             "„Weich-Währung“: Experten schlagen wegen Euro-Absturz Alarm - BILD",
             "Der Euro ist abgestürzt – und ist jetzt sogar weniger wert als der Dollar. Nur noch 99 US-Cent muss man hinlegen, um einen Euro zu bekommen.",
@@ -123,6 +190,14 @@ class MainActivity : AppCompatActivity() {
             "Euro-Alarm! \\r\\nEuropas Leitwährung ist abgestürzt und war zuletzt zeitweise sogar weniger wert als der Dollar. Nur noch 99 US-Cent musste man am Montag (22. August) hinlegen, um dafür einen Euro zu be… [+480 chars]"
         ),
         Article(
+            Source(
+                id = source[4].id,
+                name = source[4].name,
+                description = source[4].description,
+                url = source[4].url,
+                category = source[4].category,
+                language = source[4].language,
+                country = source[4].country),
             "Sascha Mattke",
             "Tesla Model Y jetzt als Basis-Version für Europa bestellbar, Produktion in China (aktualisiert) - TeslaMag.de",
             "Die Modell-Politik von Tesla lädt weiter zum Rätseln ein. Nachdem in den USA vor kurzem die Auswahl beim Model 3 auf nur noch zwei Versionen (Basis und",
