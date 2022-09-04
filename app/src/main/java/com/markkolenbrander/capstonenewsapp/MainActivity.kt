@@ -2,14 +2,13 @@ package com.markkolenbrander.capstonenewsapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
-import androidx.core.view.children
 import com.markkolenbrander.capstonenewsapp.databinding.ActivityMainBinding
+import com.markkolenbrander.capstonenewsapp.databinding.ArticleViewBinding
+import com.markkolenbrander.capstonenewsapp.models.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,31 +16,29 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val articles = NewsService()
-        makingTextViews(articles = articles)
-
+        val articles = NewsService().getArticles()
+        makingTextViews(articles)
     }
 
 
-    private fun makingTextViews(articles: NewsService){
+    private fun makingTextViews(articles: ArrayList<Article>){
 
-        val mainGroup = binding.llMain
-        var count = 0
-        for (text in mainGroup.children){
-            if (text is TextView){
-
-                val content = (articles.articles[count].source.id  ?: "...") + "\n"+
-                        articles.articles[count].source.name + "\n" +
-                        (articles.articles[count].author ?: "...") + "\n"+
-                        articles.articles[count].title + "\n"+
-                        (articles.articles[count].description ?: "...") + "\n"+
-                        articles.articles[count].url + "\n"+
-                        (articles.articles[count].urlToImage ?: "...") + "\n"+
-                        articles.articles[count].publishedAt + "\n"+
-                        articles.articles[count].content + "\n"
-                text.text = content
-                count ++
+        articles.forEach { article ->
+            ArticleViewBinding.inflate(
+                layoutInflater, binding.llMain, true).apply {
+                tvSourceId.text = article.source.id ?: "empty"
+                tvSourceName.text = article.source.name
+                tvSourceDescription.text = article.source.description
+                tvSourceUrl.text = article.source.url
+                tvArticleAuthor.text = article.author ?: "empty"
+                tvArticleTitle.text = article.title
+                tvArticleDescription.text = article.description ?: "empty"
+                tvArticleUrl.text = article.url
+                tvArticleUrlImage.text = article.urlToImage ?: "empty"
+                tvArticlePublishedAt.text = article.publishedAt
+                tvArticleContent.text = article.content
             }
         }
     }
+
 }
