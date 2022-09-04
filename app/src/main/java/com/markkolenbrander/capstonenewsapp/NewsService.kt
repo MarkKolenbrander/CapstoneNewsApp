@@ -2,10 +2,8 @@ package com.markkolenbrander.capstonenewsapp
 
 import com.markkolenbrander.capstonenewsapp.models.*
 
-
-class NewsService {
-
-    fun getArticles(): ArrayList<Article> {
+interface NewsService {
+    fun getArticles(): ArrayList<Article?> {
         val source = arrayListOf(
             Source(
                 "abc-news",
@@ -74,7 +72,7 @@ class NewsService {
                     language = source[0].language,
                     country = source[0].country
                 ),
-                "n-tv NACHRICHTEN-1",
+                null,
                 "14:00 Aktienkurs von Softwarekonzern geht durch die Decke - n-tv NACHRICHTEN",
                 "Der Börsen-Tag",
                 "https://www.n-tv.de/wirtschaft/der_boersen_tag/Der-Boersen-Tag-Freitag-26-August-2022-article23548649.html",
@@ -156,6 +154,8 @@ class NewsService {
             )
         )
     }
+}
 
+class InMemoryNewsServiceImpl: NewsService {
 
 }

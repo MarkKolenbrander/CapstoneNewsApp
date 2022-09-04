@@ -3,8 +3,8 @@ package com.markkolenbrander.capstonenewsapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.markkolenbrander.capstonenewsapp.databinding.ActivityMainBinding
-import com.markkolenbrander.capstonenewsapp.databinding.ArticleViewBinding
 import com.markkolenbrander.capstonenewsapp.models.*
+import com.markkolenbrander.capstonenewsapp.views.ArticleView
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,29 +16,17 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val articles = NewsService().getArticles()
-        makingTextViews(articles)
+        val articles = InMemoryNewsServiceImpl().getArticles()
+        val notNullFilter = articles.filterNotNull() as ArrayList<Article>
+        makingTextViews(notNullFilter)
     }
 
-
-    private fun makingTextViews(articles: ArrayList<Article>){
+    private fun makingTextViews(articles: ArrayList<Article>) {
 
         articles.forEach { article ->
-            ArticleViewBinding.inflate(
-                layoutInflater, binding.llMain, true).apply {
-                tvSourceId.text = article.source.id ?: "empty"
-                tvSourceName.text = article.source.name
-                tvSourceDescription.text = article.source.description
-                tvSourceUrl.text = article.source.url
-                tvArticleAuthor.text = article.author ?: "empty"
-                tvArticleTitle.text = article.title
-                tvArticleDescription.text = article.description ?: "empty"
-                tvArticleUrl.text = article.url
-                tvArticleUrlImage.text = article.urlToImage ?: "empty"
-                tvArticlePublishedAt.text = article.publishedAt
-                tvArticleContent.text = article.content
-            }
+            val articleView = ArticleView(this)
+            articleView.setArticleData(article)
+            binding.llMain.addView(articleView)
         }
     }
-
 }
