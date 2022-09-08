@@ -9,6 +9,7 @@ import com.markkolenbrander.capstonenewsapp.views.ArticleView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val newsService: NewsService = InMemoryNewsServiceImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,12 +17,12 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val articles = InMemoryNewsServiceImpl().getArticles()
-        val notNullFilter = articles.filterNotNull() as ArrayList<Article>
+        val articles = newsService.getArticles()
+        val notNullFilter = articles.filterNotNull()
         makingTextViews(notNullFilter)
     }
 
-    private fun makingTextViews(articles: ArrayList<Article>) {
+    private fun makingTextViews(articles: List<Article>) {
 
         articles.forEach { article ->
             val articleView = ArticleView(this)

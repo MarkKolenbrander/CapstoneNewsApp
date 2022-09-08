@@ -16,18 +16,18 @@ class ArticleView @JvmOverloads constructor  (
 
     private val binding = ArticleViewBinding.inflate(LayoutInflater.from(context), this )
 
-    fun setArticleData(article: Article?){
+    fun setArticleData(article: Article){
 
-        binding.tvSourceId.text = article?.source?.id
-        binding.tvSourceName.text = article?.source?.name
-        binding.tvSourceDescription.text = article?.source?.description
-        binding.tvSourceUrl.text = article?.source?.url
-        binding.tvArticleAuthor.text = article?.author
-        binding.tvArticleTitle.text = article?.title
-        binding.tvArticleDescription.text = article?.description
-        binding.tvArticleUrl.text = article?.url
-        binding.tvArticleUrlImage.text = article?.urlToImage
-        binding.tvArticlePublishedAt.text = article?.publishedAt
-        binding.tvArticleContent.text = article?.content
+        binding.tvSourceId.text = article.source.id
+        binding.tvSourceName.text = article.source.name
+        binding.tvSourceDescription.text = article.source.description
+        binding.tvSourceUrl.text = article.source.url
+        binding.tvArticleAuthor.text = article.author
+        binding.tvArticleTitle.text = article.title
+        binding.tvArticleDescription.text = article.description
+        binding.tvArticleUrl.text = article.url
+        binding.tvArticleUrlImage.text = article.urlToImage
+        binding.tvArticlePublishedAt.text = article.publishedAt
+        binding.tvArticleContent.text = article.content
     }
 }

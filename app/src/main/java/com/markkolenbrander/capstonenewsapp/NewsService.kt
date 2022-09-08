@@ -3,7 +3,12 @@ package com.markkolenbrander.capstonenewsapp
 import com.markkolenbrander.capstonenewsapp.models.*
 
 interface NewsService {
-    fun getArticles(): ArrayList<Article?> {
+    fun getArticles(): ArrayList<Article?>
+}
+
+class InMemoryNewsServiceImpl: NewsService {
+
+    override fun getArticles(): ArrayList<Article?> {
         val source = arrayListOf(
             Source(
                 "abc-news",
@@ -154,8 +159,4 @@ interface NewsService {
             )
         )
     }
-}
-
-class InMemoryNewsServiceImpl: NewsService {
-
 }
