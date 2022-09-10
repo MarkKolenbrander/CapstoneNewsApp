@@ -16,7 +16,8 @@ class ArticleView @JvmOverloads constructor  (
 
     private val binding = ArticleViewBinding.inflate(LayoutInflater.from(context), this )
 
-    fun setArticleData(article: Article){
+    // Todo: (set data fun) Make 2 functions - 1. With Title Source - 2. Rest of details
+    fun setArticleData(article: Article, onDeleteTapped: () -> Unit){
 
         binding.tvSourceId.text = article.source.id
         binding.tvSourceName.text = article.source.name
@@ -29,5 +30,13 @@ class ArticleView @JvmOverloads constructor  (
         binding.tvArticleUrlImage.text = article.urlToImage
         binding.tvArticlePublishedAt.text = article.publishedAt
         binding.tvArticleContent.text = article.content
+        setOnDeleteTapped(onDeleteTapped)
     }
+
+    private fun setOnDeleteTapped(onDeleteTapped: () -> Unit){
+        binding.ibDelete.setOnClickListener {
+            onDeleteTapped()
+        }
+    }
+
 }

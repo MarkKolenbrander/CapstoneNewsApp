@@ -2,9 +2,8 @@ package com.markkolenbrander.capstonenewsapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.markkolenbrander.capstonenewsapp.adapters.ArticleAdapter
 import com.markkolenbrander.capstonenewsapp.databinding.ActivityMainBinding
-import com.markkolenbrander.capstonenewsapp.models.*
-import com.markkolenbrander.capstonenewsapp.views.ArticleView
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,16 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         val articles = newsService.getArticles()
-        val notNullFilter = articles.filterNotNull()
-        makingTextViews(notNullFilter)
-    }
 
-    private fun makingTextViews(articles: List<Article>) {
-
-        articles.forEach { article ->
-            val articleView = ArticleView(this)
-            articleView.setArticleData(article)
-            binding.llMain.addView(articleView)
-        }
+        binding.rvArticles.adapter = ArticleAdapter(articles)
     }
 }
