@@ -5,10 +5,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.markkolenbrander.capstonenewsapp.models.Article
 import com.markkolenbrander.capstonenewsapp.views.ArticleView
 import com.markkolenbrander.capstonenewsapp.views.ArticleViewHolder
+import com.markkolenbrander.capstonenewsapp.views.DetailView
 
-class ArticleAdapter(articleList: ArrayList<Article?>) : RecyclerView.Adapter<ArticleViewHolder>() {
-
-    private val articles = articleList.toMutableList()
+class ArticleAdapter(private val articlesList: ArrayList<Article?>) : RecyclerView.Adapter<ArticleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         val articleView = ArticleView(parent.context)
@@ -16,23 +15,30 @@ class ArticleAdapter(articleList: ArrayList<Article?>) : RecyclerView.Adapter<Ar
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
         )
-        return ArticleViewHolder(articleView)
+
+        val detailView = DetailView(parent.context)
+        detailView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        )
+        return ArticleViewHolder(articleView, detailView)
     }
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
-        articles[position]?.let {
+        articlesList[position]?.let {
             holder.bindData(it){
                 removeArticleIndex(holder.absoluteAdapterPosition)
             }
         }
+        articlesList[position]?.let { holder.setDetailData(it) }
     }
 
     override fun getItemCount(): Int {
-        return articles.size
+        return articlesList.size
     }
 
     private fun removeArticleIndex(index: Int) {
-        articles.removeAt(index)
+        articlesList.removeAt(index)
         notifyItemRemoved(index)
     }
 }
