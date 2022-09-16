@@ -6,55 +6,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.findNavController
 import com.markkolenbrander.capstonenewsapp.adapters.ArticleAdapter
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentArticlesListBinding
 
 class ArticlesListFragment : Fragment() {
 
+    private lateinit var binding : FragmentArticlesListBinding
     private val newsService: NewsService = InMemoryNewsServiceImpl()
-//    private lateinit var articleDataManager: ArticleDataManager
-
-//    private lateinit var adapter: ArticleAdapter
-//    private lateinit var articleList: Article
-
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        arguments?.let {
-//            articleList = it.getParcelable(ARG_LIST)!!
-//        }
-//
-//    }
+    private lateinit var articleDataManager: ArticleDataManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val binding = FragmentArticlesListBinding.inflate(inflater)
+    ): View {
+        binding = FragmentArticlesListBinding.inflate(layoutInflater)
 
-//        activity?.let {
-//            articleDataManager = ViewModelProvider(this)[ArticleDataManager::class.java]
-//        }
-
-        val articlesHardCoded = newsService.getArticles()
-        binding.rvArticles.layoutManager = LinearLayoutManager(activity)
-        binding.rvArticles.adapter = ArticleAdapter(articlesHardCoded)
-
+        activity?.let {
+            articleDataManager = ViewModelProvider(this)[ArticleDataManager::class.java]
+        }
         return binding.root
     }
 
-//    companion object{
-//
-//        private const val ARG_LIST = "list"
-//
-//        fun newInstance(article: Article) : DetailFragment {
-//            val bundle = Bundle()
-//            bundle.putParcelable(ARG_LIST, article)
-//            val fragment = DetailFragment()
-//            fragment.arguments = bundle
-//            return fragment
-//        }
-//    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        val storedArticles = articleDataManager.fetchArticles()
+        val articlesToUse = storedArticles.ifEmpty {
+            articleDataManager.saveArticles(newsService.getArticles())
+            articleDataManager.fetchArticles()
+        }
+
+        val articleAdapter = ArticleAdapter(articlesToUse) {
+            val direction = ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(it)
+            findNavController().navigate(direction)
+        }
+        binding.rvArticles.run {
+            adapter = articleAdapter
+        }
+    }
 }

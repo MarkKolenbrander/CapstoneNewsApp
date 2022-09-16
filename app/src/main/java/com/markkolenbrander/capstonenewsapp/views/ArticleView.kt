@@ -16,7 +16,6 @@ class ArticleView @JvmOverloads constructor  (
 
     private val binding = ArticleViewBinding.inflate(LayoutInflater.from(context), this )
 
-
     fun setArticleData(article: Article, onDeleteTapped: () -> Unit){
         binding.tvSourceName.text = article.source.name
         binding.tvArticleTitle.text = article.title
@@ -24,18 +23,6 @@ class ArticleView @JvmOverloads constructor  (
         binding.tvArticlePublishedAt.text = article.publishedAt
         setOnDeleteTapped(onDeleteTapped)
     }
-
-    //Todo: The rest of the info will go on the detail screen later
-
-//    fun setDetailScreenData(article: Article){
-//        binding.tvSourceId.text = article.source.id
-//        binding.tvSourceDescription.text = article.source.description
-//        binding.tvSourceUrl.text = article.source.url
-//        binding.tvArticleDescription.text = article.description
-//        binding.tvArticleUrl.text = article.url
-//        binding.tvArticleUrlImage.text = article.urlToImage
-//        binding.tvArticleContent.text = article.content
-//    }
 
     private fun setOnDeleteTapped(onDeleteTapped: () -> Unit){
         binding.ibDelete.setOnClickListener {

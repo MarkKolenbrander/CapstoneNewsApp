@@ -5,9 +5,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.markkolenbrander.capstonenewsapp.models.Article
 import com.markkolenbrander.capstonenewsapp.views.ArticleView
 import com.markkolenbrander.capstonenewsapp.views.ArticleViewHolder
-import com.markkolenbrander.capstonenewsapp.views.DetailView
 
-class ArticleAdapter(private val articlesList: ArrayList<Article?>) : RecyclerView.Adapter<ArticleViewHolder>() {
+class ArticleAdapter(
+    private val articlesList: ArrayList<Article?>,
+    private val onArticleTapped: (Article) -> Unit,
+) : RecyclerView.Adapter<ArticleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         val articleView = ArticleView(parent.context)
@@ -15,22 +17,18 @@ class ArticleAdapter(private val articlesList: ArrayList<Article?>) : RecyclerVi
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
         )
-
-        val detailView = DetailView(parent.context)
-        detailView.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        return ArticleViewHolder(articleView, detailView)
+        return ArticleViewHolder(articleView)
     }
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
+        holder.itemView.setOnClickListener {
+            articlesList[position]?.let { it1 -> onArticleTapped(it1) }
+        }
         articlesList[position]?.let {
-            holder.bindData(it){
+            holder.bindData(it) {
                 removeArticleIndex(holder.absoluteAdapterPosition)
             }
         }
-        articlesList[position]?.let { holder.setDetailData(it) }
     }
 
     override fun getItemCount(): Int {

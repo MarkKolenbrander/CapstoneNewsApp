@@ -17,5 +17,9 @@
         android:id="@+id/detailFragment"
         android:name="com.markkolenbrander.capstonenewsapp.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="article"
+            app:argType="com.markkolenbrander.capstonenewsapp.models.Article" />
+    </fragment>
 </navigation>

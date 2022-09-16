@@ -4,35 +4,29 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.markkolenbrander.capstonenewsapp.models.Article
 
-class ArticleDataManager(application: Application) : AndroidViewModel(application) {
+class ArticleDataManager(application: Application) : AndroidViewModel(application){
 
-    //Todo: Couldn't get the shared preferences working
+    private val context = application.applicationContext
 
-//    private val context = application.applicationContext
-//    private val newsService: NewsService = InMemoryNewsServiceImpl()
+    private val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
+    private val gson = Gson()
 
+    fun saveArticles(articles: ArrayList<Article?>){
+        val articlesJson = gson.toJson(articles)
+        sharedPrefs.edit().putString(PREFS_KEY_ARTICLES, articlesJson).apply()
+    }
 
-//    fun saveArticleList(articles: ArrayList<Article?>){
-//        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context).edit()
-//        val gson = Gson()
-//        val json: String = gson.toJson(articles)
-//        sharedPrefs.putString("articles", json)
-//        sharedPrefs.apply()
-//    }
+    fun fetchArticles(): ArrayList<Article?>{
+        val articleJson = sharedPrefs.getString(PREFS_KEY_ARTICLES, "")
+        val articleListTypeToken = object : TypeToken<ArrayList<Article?>>(){ }
+        return gson.fromJson(articleJson, articleListTypeToken.type)
+    }
 
-//    fun readArticles(): ArrayList<ArticleList> {
-//        val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
-//        val contents = sharedPrefs.all
-//        val articlesList = ArrayList<ArticleList>()
-//
-//        for (article in contents){
-//            val articleItems = ArrayList(article.value as HashSet<*>)
-//            val articleList = ArticleList(article.key, articleItems.toString())
-//            articlesList.add(articleList)
-//        }
-//        return articlesList
-//    }
+    companion object{
+        private const val PREFS_KEY_ARTICLES = "articles"
+    }
 
 }
