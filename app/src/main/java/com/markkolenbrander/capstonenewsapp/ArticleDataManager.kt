@@ -1,6 +1,7 @@
 package com.markkolenbrander.capstonenewsapp
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
@@ -21,6 +22,9 @@ class ArticleDataManager(application: Application) : AndroidViewModel(applicatio
 
     fun fetchArticles(): ArrayList<Article?>{
         val articleJson = sharedPrefs.getString(PREFS_KEY_ARTICLES, "")
+
+        if (articleJson.isNullOrBlank()) return ArrayList()
+
         val articleListTypeToken = object : TypeToken<ArrayList<Article?>>(){ }
         return gson.fromJson(articleJson, articleListTypeToken.type)
     }
