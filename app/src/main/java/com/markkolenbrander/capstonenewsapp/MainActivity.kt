@@ -2,14 +2,15 @@ package com.markkolenbrander.capstonenewsapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.markkolenbrander.capstonenewsapp.databinding.ActivityMainBinding
-import com.markkolenbrander.capstonenewsapp.models.*
-import com.markkolenbrander.capstonenewsapp.views.ArticleView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val newsService: NewsService = InMemoryNewsServiceImpl()
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,17 +18,10 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val articles = newsService.getArticles()
-        val notNullFilter = articles.filterNotNull()
-        makingTextViews(notNullFilter)
-    }
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        setupActionBarWithNavController(this, navController)
 
-    private fun makingTextViews(articles: List<Article>) {
-
-        articles.forEach { article ->
-            val articleView = ArticleView(this)
-            articleView.setArticleData(article)
-            binding.llMain.addView(articleView)
-        }
     }
 }
