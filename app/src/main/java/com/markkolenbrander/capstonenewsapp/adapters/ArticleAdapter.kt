@@ -22,7 +22,7 @@ class ArticleAdapter(
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-            articlesList[position]?.let { it1 -> onArticleTapped(it1) }
+            articlesList[position]?.let { article -> onArticleTapped(article) }
         }
         articlesList[position]?.let {
             holder.bindData(it) {
