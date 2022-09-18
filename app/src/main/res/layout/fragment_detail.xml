@@ -127,6 +127,15 @@
                     android:textSize="18sp"
                     tools:text="Article Author Content" />
 
+                <ImageView
+                    android:id="@+id/iv_img_url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/article_image"
+                    android:layout_marginTop="16dp"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/ic_test_img" />
+
             </LinearLayout>
 
         </ScrollView>

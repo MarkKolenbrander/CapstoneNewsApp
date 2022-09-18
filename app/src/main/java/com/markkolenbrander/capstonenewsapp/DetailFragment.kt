@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentDetailBinding
 
 class DetailFragment : Fragment() {
@@ -29,9 +30,13 @@ class DetailFragment : Fragment() {
         binding.tvSourceUrl.text = args.article.source?.url
         binding.tvArticleAuthor.text = args.article.author
         binding.tvArticleDescription.text = args.article.url
-        binding.tvArticleUrlImage.text = args.article.urlToImage
         binding.tvArticlePublishedAt.text = args.article.publishedAt
         binding.tvArticleContent.text = args.article.content
         binding.tvArticleTitle.text = args.article.title
+
+        val imgView = binding.ivImgUrl
+        val item = args.article.urlToImage
+        context?.let { Glide.with(it).load(item).into(imgView) }
+
     }
 }
