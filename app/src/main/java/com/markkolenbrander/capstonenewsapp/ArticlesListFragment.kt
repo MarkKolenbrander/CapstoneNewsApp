@@ -68,15 +68,12 @@ class ArticlesListFragment : Fragment() {
 
         if (!networkStatusChecker.hasInternetConnection()){
             noInternet()
-            binding.btnRefresh.setOnClickListener {
-                setArticles()
-            }
         }else{
             binding.rvArticles.visibility = View.VISIBLE
             binding.ivNoInternet.visibility = View.GONE
             binding.tvNoInternet.visibility = View.GONE
-            binding.btnRefresh.visibility = View.GONE
         }
+        swipeToRefresh()
     }
 
     private fun failureDialog(){
@@ -98,10 +95,8 @@ class ArticlesListFragment : Fragment() {
     private fun noInternet(){
 
         binding.rvArticles.visibility = View.GONE
-
         binding.ivNoInternet.visibility = View.VISIBLE
         binding.tvNoInternet.visibility = View.VISIBLE
-        binding.btnRefresh.visibility = View.VISIBLE
         binding.ivNoInternet.setImageResource(R.drawable.ic_no_wifi)
     }
 
