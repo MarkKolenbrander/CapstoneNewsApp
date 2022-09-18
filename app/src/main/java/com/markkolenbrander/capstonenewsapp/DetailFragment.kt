@@ -24,9 +24,9 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvSourceId.text = args.article.source.id
+        binding.tvSourceId.text = args.article.source?.name
         binding.tvSourceDescription.text = args.article.description
-        binding.tvSourceUrl.text = args.article.source.url
+        binding.tvSourceUrl.text = args.article.source?.url
         binding.tvArticleAuthor.text = args.article.author
         binding.tvArticleDescription.text = args.article.url
         binding.tvArticleUrlImage.text = args.article.urlToImage

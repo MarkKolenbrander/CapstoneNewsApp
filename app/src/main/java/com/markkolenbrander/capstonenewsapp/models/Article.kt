@@ -1,17 +1,18 @@
 package com.markkolenbrander.capstonenewsapp.models
 
 import android.os.Parcelable
+import com.squareup.moshi.Json
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Article(
-    val source: Source,
-    val author: String? = null,
-    val title: String,
-    val description: String? = null,
-    val url: String,
-    val urlToImage: String? = null,
-    val publishedAt: String,
-    val content: String,
+    @Json(name = "source") val source: Source?,
+    @Json(name = "author")val author: String? = null,
+    @Json(name = "title")val title: String? = null,
+    @Json(name = "description")val description: String? = null,
+    @Json(name = "url")val url: String? = null,
+    @Json(name = "urlToImage")val urlToImage: String? = null,
+    @Json(name = "publishedAt")val publishedAt: String? = null,
+    @Json(name = "content")val content: String? = null,
 ) : Parcelable
 
