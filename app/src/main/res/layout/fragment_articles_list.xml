@@ -23,35 +23,35 @@
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tv_no_internet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:padding="16dp"
-                android:layout_marginTop="100dp"
-                android:textColor="@color/blue_capstone"
-                android:textSize="18sp"
-                android:visibility="gone"
-                android:text="@string/internet_problem"/>
-
-            <ImageView
-                android:id="@+id/iv_no_internet"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/no_internet"
-                android:visibility="gone"
-                android:src="@drawable/ic_no_wifi"
-                />
+                android:layout_height="match_parent">
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_no_internet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:padding="16dp"
+                    android:layout_marginTop="100dp"
+                    android:textColor="@color/blue_capstone"
+                    android:textSize="18sp"
+                    android:visibility="gone"
+                    android:text="@string/internet_problem"/>
+
+                <ImageView
+                    android:id="@+id/iv_no_internet"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/no_internet"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_no_wifi"
+                    />
+
+            </RelativeLayout>
 
     </FrameLayout>
 
