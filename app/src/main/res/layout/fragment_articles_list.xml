@@ -39,6 +39,7 @@
                     android:layout_marginTop="100dp"
                     android:textColor="@color/blue_capstone"
                     android:textSize="18sp"
+                    android:textAlignment="center"
                     android:visibility="gone"
                     android:text="@string/internet_problem"/>
 
@@ -46,6 +47,7 @@
                     android:id="@+id/iv_no_internet"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:padding="16dp"
                     android:contentDescription="@string/no_internet"
                     android:visibility="gone"
                     android:src="@drawable/ic_no_wifi"
