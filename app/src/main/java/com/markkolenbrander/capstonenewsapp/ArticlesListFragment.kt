@@ -2,6 +2,7 @@ package com.markkolenbrander.capstonenewsapp
 
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,7 +42,9 @@ class ArticlesListFragment : Fragment() {
 
     private fun setArticles(){
         networkStatusChecker.performIfConnectedToInternet {
+            Log.i("TaskThread1", Thread.currentThread().name)
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
+                Log.i("TaskThread2", Thread.currentThread().name)
                 val result = remoteApi.getArticles()
                 withContext(Dispatchers.Main){
                     when (result) {
