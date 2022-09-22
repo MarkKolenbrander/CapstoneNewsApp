@@ -16,17 +16,17 @@ class ArticleView @JvmOverloads constructor  (
 
     private val binding = ArticleViewBinding.inflate(LayoutInflater.from(context), this )
 
-    fun setArticleData(article: Article, onDeleteTapped: () -> Unit){
-        binding.tvSourceName.text = article.source.name
-        binding.tvArticleTitle.text = article.title
-        binding.tvArticleAuthor.text = article.author
-        binding.tvArticlePublishedAt.text = article.publishedAt
-        setOnDeleteTapped(onDeleteTapped)
+    fun setArticleData(article: Article){
+        binding.tvSourceName.text = article.source?.name ?: ""
+        binding.tvArticleTitle.text = article.title ?: ""
+        binding.tvArticleAuthor.text = article.author ?: ""
+        binding.tvArticlePublishedAt.text = article.publishedAt ?: ""
+//        setOnDeleteTapped(onDeleteTapped)
     }
 
-    private fun setOnDeleteTapped(onDeleteTapped: () -> Unit){
-        binding.ibDelete.setOnClickListener {
-            onDeleteTapped()
-        }
-    }
+//    private fun setOnDeleteTapped(onDeleteTapped: () -> Unit){
+//        binding.ibDelete.setOnClickListener {
+//            onDeleteTapped()
+//        }
+//    }
 }

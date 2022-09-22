@@ -7,7 +7,7 @@ import com.markkolenbrander.capstonenewsapp.views.ArticleView
 import com.markkolenbrander.capstonenewsapp.views.ArticleViewHolder
 
 class ArticleAdapter(
-    private val articlesList: ArrayList<Article?>,
+    private val articlesList: List<Article>,
     private val onArticleTapped: (Article) -> Unit,
 ) : RecyclerView.Adapter<ArticleViewHolder>() {
 
@@ -22,21 +22,22 @@ class ArticleAdapter(
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-            articlesList[position]?.let { article -> onArticleTapped(article) }
+            onArticleTapped(articlesList[position])
         }
-        articlesList[position]?.let {
-            holder.bindData(it) {
-                removeArticleIndex(holder.absoluteAdapterPosition)
-            }
-        }
+//        articlesList[position]?.let {
+//            holder.bindData(it) {
+//                removeArticleIndex(holder.absoluteAdapterPosition)
+//            }
+//        }
+        holder.bindData(articlesList[position])
     }
 
     override fun getItemCount(): Int {
         return articlesList.size
     }
 
-    private fun removeArticleIndex(index: Int) {
-        articlesList.removeAt(index)
-        notifyItemRemoved(index)
-    }
+//    private fun removeArticleIndex(index: Int) {
+//        articlesList.removeAt(index)
+//        notifyItemRemoved(index)
+//    }
 }

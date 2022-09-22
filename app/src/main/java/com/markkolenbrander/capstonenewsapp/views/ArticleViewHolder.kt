@@ -5,7 +5,12 @@ import com.markkolenbrander.capstonenewsapp.models.Article
 
 class ArticleViewHolder(private val articleView: ArticleView) : RecyclerView.ViewHolder(articleView) {
 
-    fun bindData(article: Article, onDeleteTapped: () -> Unit){
-        articleView.setArticleData(article, onDeleteTapped)
+    fun bindData(article: Article){
+        articleView.setArticleData(article)
     }
+
+//    fun bindData(article: Article, onDeleteTapped: () -> Unit){
+//        articleView.setArticleData(article, onDeleteTapped)
+//    }
+
 }

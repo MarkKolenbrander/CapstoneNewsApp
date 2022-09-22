@@ -3,4 +3,8 @@
     <string name="delete_button">delete button</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_internet">No Internet</string>
+    <string name="refresh">REFRESH</string>
+    <string name="internet_problem">It seems like there is no internet connection. Check your settings to receive the news articles</string>
+    <string name="article_image">article_image</string>
 </resources>
