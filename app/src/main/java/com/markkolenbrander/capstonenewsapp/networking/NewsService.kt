@@ -1,6 +1,7 @@
 package com.markkolenbrander.capstonenewsapp.networking
 
 
+import com.markkolenbrander.capstonenewsapp.models.Article
 import com.markkolenbrander.capstonenewsapp.models.Base
 import com.markkolenbrander.capstonenewsapp.models.Category
 import com.markkolenbrander.capstonenewsapp.models.Country
@@ -14,5 +15,5 @@ interface NewsService {
         @Query("apiKey") token : String,
         @Query("country") country : Country,
         @Query("category") category: Category,
-    ) : Base
+    ) : Article
 }

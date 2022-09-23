@@ -2,12 +2,15 @@ package com.markkolenbrander.capstonenewsapp
 
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -26,6 +29,7 @@ class ArticlesListFragment : Fragment() {
     private val networkStatusChecker by lazy {
         NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
     }
+    private val viewModel: ArticleViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,43 +45,58 @@ class ArticlesListFragment : Fragment() {
     }
 
     private fun setArticles(){
-        networkStatusChecker.performIfConnectedToInternet {
-            Log.i("TaskThread1", Thread.currentThread().name)
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
-                Log.i("TaskThread2", Thread.currentThread().name)
-                val result = remoteApi.getArticles()
-                withContext(Dispatchers.Main){
-                    when (result) {
-                        is Result.Success -> {
-                            val articleAdapter = ArticleAdapter(result.data.articles) {
-                                val direction =
-                                    ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(
-                                        it
-                                    )
-                                findNavController().navigate(direction)
-                            }
-                            binding.rvArticles.run {
-                                adapter = articleAdapter
-                                swipeToRefresh()
-                            }
-                        }
-                        is Result.Failure -> {
-                            failureDialog()
-                        }
-                    }
-                }
+
+        val articleAdapter = viewModel.getArticles().let {
+            ArticleAdapter(it) {
+                val direction =
+                    ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(
+                        it
+                    )
+                findNavController().navigate(direction)
             }
         }
-
-        if (!networkStatusChecker.hasInternetConnection()){
-            noInternet()
-        }else{
-            binding.rvArticles.visibility = View.VISIBLE
-            binding.ivNoInternet.visibility = View.GONE
-            binding.tvNoInternet.visibility = View.GONE
+        binding.rvArticles.run {
+            adapter = articleAdapter
+            swipeToRefresh()
         }
-        swipeToRefresh()
     }
+
+//    private fun setArticles(){
+//        networkStatusChecker.performIfConnectedToInternet {
+//            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
+//                val result = remoteApi.getArticles()
+//                withContext(Dispatchers.Main){
+//                    when (result) {
+//                        is Result.Success -> {
+//                            val articleAdapter = ArticleAdapter(result.data.articles) {
+//                                val direction =
+//                                    ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(
+//                                        it
+//                                    )
+//                                findNavController().navigate(direction)
+//                            }
+//                            binding.rvArticles.run {
+//                                adapter = articleAdapter
+//                                swipeToRefresh()
+//                            }
+//                        }
+//                        is Result.Failure -> {
+//                            failureDialog()
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (!networkStatusChecker.hasInternetConnection()){
+//            noInternet()
+//        }else{
+//            binding.rvArticles.visibility = View.VISIBLE
+//            binding.ivNoInternet.visibility = View.GONE
+//            binding.tvNoInternet.visibility = View.GONE
+//        }
+//        swipeToRefresh()
+//    }
 
     private fun failureDialog(){
         val dialogTitle = "We are sorry!"
