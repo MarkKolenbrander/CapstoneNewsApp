@@ -1,14 +1,9 @@
 package com.markkolenbrander.capstonenewsapp
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.markkolenbrander.capstonenewsapp.models.Article
-import com.markkolenbrander.capstonenewsapp.models.Base
-import com.markkolenbrander.capstonenewsapp.models.Category
-import com.markkolenbrander.capstonenewsapp.models.Country
+import androidx.lifecycle.*
+import com.markkolenbrander.capstonenewsapp.models.*
 import com.markkolenbrander.capstonenewsapp.networking.NewsService
+import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 import kotlinx.coroutines.launch
 
 const val BASE_URL = "https://newsapi.org/v2/"
@@ -16,20 +11,29 @@ const val API_TOKEN = "9ced23497a9d4184bffbe366d3a804d7"
 
 class ArticleViewModel(private val newsService: NewsService) : ViewModel() {
 
-    private val _articles = MutableLiveData<List<Article>>(emptyList())
-    val articles: LiveData<List<Article>> = _articles
+    class Factory(
+        private val newsService: NewsService,
+    ): ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return ArticleViewModel(newsService) as T
+        }
+    }
 
-//    private val _status = MutableLiveData<Result<T>>()
+    private val _base = MutableLiveData<Base>()
+    val base: LiveData<Base> = _base
 
 
-    fun getArticles(){
+    init {
         viewModelScope.launch {
             try {
-                _articles.value = listOf(newsService.getArticles(API_TOKEN, Country.NL, Category.GENERAL))
+                val response = newsService.getArticles(API_TOKEN, Country.NL, Category.GENERAL)
+                _base.value = response
+
             } catch (e: Exception){
-                _articles.value = listOf()
+                CustomResult.Failure(e)
             }
         }
+
     }
 
 }

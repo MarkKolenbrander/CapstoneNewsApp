@@ -8,5 +8,5 @@ import kotlinx.parcelize.Parcelize
 data class Base(
     @Json(name = "status") val status: String,
     @Json(name ="totalResults") val totalResults: Int,
-    @Json(name ="articles") val articles: List<Article>
+    @Json(name ="articles") val articles: List<Article?>
 ) : Parcelable

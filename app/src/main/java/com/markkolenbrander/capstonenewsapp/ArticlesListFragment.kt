@@ -7,31 +7,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.markkolenbrander.capstonenewsapp.adapters.ArticleAdapter
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentArticlesListBinding
-import com.markkolenbrander.capstonenewsapp.models.Result
+import com.markkolenbrander.capstonenewsapp.models.Article
+import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 import com.markkolenbrander.capstonenewsapp.networking.NetworkStatusChecker
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.markkolenbrander.capstonenewsapp.networking.buildApiService
 
 class ArticlesListFragment : Fragment() {
 
     private lateinit var binding : FragmentArticlesListBinding
-    private val remoteApi = App.remoteApi
+//    private val remoteApi = App.remoteApi
     private val networkStatusChecker by lazy {
         NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
     }
-    private val viewModel: ArticleViewModel by activityViewModels()
+    private val viewModel: ArticleViewModel by viewModels{
+        ArticleViewModel.Factory(newsService = buildApiService())
+    }
 
-    override fun onCreateView(
+        override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
@@ -41,66 +38,40 @@ class ArticlesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setArticles()
+        swipeToRefresh()
+
+        networkStatusChecker.performIfConnectedToInternet {
+            viewModel.base.observe(viewLifecycleOwner) { articleResult ->
+                setArticles(articleResult.articles)
+            }
+        }
+        if (!networkStatusChecker.hasInternetConnection()){
+            noInternet()
+            swipeToRefresh()
+        }else{
+            binding.rvArticles.visibility = View.VISIBLE
+            binding.ivNoInternet.visibility = View.GONE
+            binding.tvNoInternet.visibility = View.GONE
+        }
     }
 
-    private fun setArticles(){
+    private fun setArticles(articles: List<Article?>){
 
-        val articleAdapter = viewModel.getArticles().let {
-            ArticleAdapter(it) {
-                val direction =
-                    ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(
-                        it
-                    )
-                findNavController().navigate(direction)
-            }
+        val articleAdapter = ArticleAdapter(articles) { article ->
+            val direction =
+                ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(
+                    article
+                )
+            findNavController().navigate(direction)
         }
         binding.rvArticles.run {
             adapter = articleAdapter
-            swipeToRefresh()
         }
     }
 
-//    private fun setArticles(){
-//        networkStatusChecker.performIfConnectedToInternet {
-//            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO){
-//                val result = remoteApi.getArticles()
-//                withContext(Dispatchers.Main){
-//                    when (result) {
-//                        is Result.Success -> {
-//                            val articleAdapter = ArticleAdapter(result.data.articles) {
-//                                val direction =
-//                                    ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(
-//                                        it
-//                                    )
-//                                findNavController().navigate(direction)
-//                            }
-//                            binding.rvArticles.run {
-//                                adapter = articleAdapter
-//                                swipeToRefresh()
-//                            }
-//                        }
-//                        is Result.Failure -> {
-//                            failureDialog()
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        if (!networkStatusChecker.hasInternetConnection()){
-//            noInternet()
-//        }else{
-//            binding.rvArticles.visibility = View.VISIBLE
-//            binding.ivNoInternet.visibility = View.GONE
-//            binding.tvNoInternet.visibility = View.GONE
-//        }
-//        swipeToRefresh()
-//    }
-
     private fun failureDialog(){
         val dialogTitle = "We are sorry!"
-        val dialogMessage = Result.Failure(Exception("The news articles could not be loaded")).toString()
+        val dialogMessage = CustomResult.Failure(Exception("No data")).toString()
         val builder = activity?.let { AlertDialog.Builder(it) }
 
         builder?.setTitle(dialogTitle)
@@ -125,7 +96,9 @@ class ArticlesListFragment : Fragment() {
     private fun swipeToRefresh(){
         val swipe : SwipeRefreshLayout = binding.srLayout
         swipe.setOnRefreshListener {
-            setArticles()
+            viewModel.base.observe(viewLifecycleOwner){article ->
+                setArticles(article.articles)
+            }
             swipe.isRefreshing = false
         }
     }
