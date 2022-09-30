@@ -13,8 +13,10 @@ class DownloadWorker(context: Context, workerParameters: WorkerParameters)
     : Worker(context, workerParameters) {
 
     override fun doWork(): Result {
-        val imageURL = URL("url")
-        val connection = imageURL.openConnection() as HttpURLConnection
+        val imageDownloadPath = inputData.getString("image_path") ?: return Result.failure()
+        val imageUrl = URL(imageDownloadPath)
+
+        val connection = imageUrl.openConnection() as HttpURLConnection
         connection.doInput = true
         connection.connect()
 

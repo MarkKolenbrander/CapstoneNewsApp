@@ -36,7 +36,7 @@ class DownloadImageWorker (context: Context, workerParameters: WorkerParameters)
             output.flush()
         }
         val output = workDataOf("image_path" to file.absolutePath)
-        return Result.success()
+        return Result.success(output)
     }
 
-    }
+}

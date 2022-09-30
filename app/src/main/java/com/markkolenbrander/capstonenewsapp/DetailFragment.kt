@@ -11,19 +11,14 @@ import androidx.navigation.fragment.navArgs
 import androidx.work.*
 import com.bumptech.glide.Glide
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentDetailBinding
-import com.markkolenbrander.capstonenewsapp.worker.DownloadImageWorker
 import com.markkolenbrander.capstonenewsapp.worker.DownloadWorker
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
+import kotlinx.coroutines.*
 
 class DetailFragment : Fragment() {
 
     private lateinit var binding: FragmentDetailBinding
     private val args by navArgs<DetailFragmentArgs>()
-    private val item = args.article.urlToImage
+//    private val item = args.article.urlToImage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +40,7 @@ class DetailFragment : Fragment() {
         binding.tvArticleContent.text = args.article.content
         binding.tvArticleTitle.text = args.article.title
 
-        //Todo: Check here to go further
+
         args.article.urlToImage?.let { onImageDownload(it) }
 
 //        val imgView = binding.ivImgUrl
@@ -61,23 +56,27 @@ class DetailFragment : Fragment() {
             .setRequiredNetworkType(NetworkType.NOT_ROAMING)
             .build()
 
-        val downloadImageWorker = OneTimeWorkRequestBuilder<DownloadImageWorker>()
+        val downloadWorker = OneTimeWorkRequestBuilder<DownloadWorker>()
             .setInputData(workDataOf("image_path" to imageUrl))
             .setConstraints(constraints)
             .build()
 
         val workManager = context?.let { WorkManager.getInstance(it) }
-        workManager?.enqueue(downloadImageWorker)
+        workManager?.enqueue(downloadWorker)
 
-        workManager?.getWorkInfoByIdLiveData(downloadImageWorker.id)
+        workManager?.getWorkInfoByIdLiveData(downloadWorker.id)
             ?.observe(viewLifecycleOwner, Observer { info ->
-                if (info.state.isFinished) {
-                    val imageFile =
-                        activity?.let { Glide.with(it).asFile().load(item).submit().get() }
-                    if (imageFile != null) {
-                        displayImage(imageFile.path)
+                GlobalScope.launch {
+                    if (info.state.isFinished) {
+                        val item = args.article.urlToImage
+                        val imageFile =
+                            activity?.let { Glide.with(it).asFile().load(item).submit().get() }
+                        if (imageFile != null) {
+                            displayImage(imageFile.absolutePath)
+                        }
                     }
                 }
+
             })
     }
 
