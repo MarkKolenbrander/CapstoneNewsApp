@@ -3,7 +3,6 @@ package com.markkolenbrander.capstonenewsapp.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.markkolenbrander.capstonenewsapp.models.Article
-import com.markkolenbrander.capstonenewsapp.models.Base
 import com.markkolenbrander.capstonenewsapp.views.ArticleView
 import com.markkolenbrander.capstonenewsapp.views.ArticleViewHolder
 

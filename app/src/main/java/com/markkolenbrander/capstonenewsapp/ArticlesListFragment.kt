@@ -20,7 +20,6 @@ import com.markkolenbrander.capstonenewsapp.networking.buildApiService
 class ArticlesListFragment : Fragment() {
 
     private lateinit var binding : FragmentArticlesListBinding
-//    private val remoteApi = App.remoteApi
     private val networkStatusChecker by lazy {
         NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
     }
@@ -28,7 +27,7 @@ class ArticlesListFragment : Fragment() {
         ArticleViewModel.Factory(newsService = buildApiService())
     }
 
-        override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
@@ -38,16 +37,27 @@ class ArticlesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fetchArticles()
         swipeToRefresh()
+    }
 
+    private fun fetchArticles(){
         networkStatusChecker.performIfConnectedToInternet {
-            viewModel.base.observe(viewLifecycleOwner) { articleResult ->
-                setArticles(articleResult.articles)
+            binding.srLayout.isRefreshing = true
+            viewModel.articleLiveData.observe(viewLifecycleOwner) { articleResult ->
+                when(articleResult){
+                    is CustomResult.Success -> {
+                        setArticles(articleResult.value.articles)
+                    }
+                    is CustomResult.Failure -> {
+                        failureDialog()
+                    }
+                }
+                binding.srLayout.isRefreshing = false
             }
         }
         if (!networkStatusChecker.hasInternetConnection()){
             noInternet()
-            swipeToRefresh()
         }else{
             binding.rvArticles.visibility = View.VISIBLE
             binding.ivNoInternet.visibility = View.GONE
@@ -96,9 +106,7 @@ class ArticlesListFragment : Fragment() {
     private fun swipeToRefresh(){
         val swipe : SwipeRefreshLayout = binding.srLayout
         swipe.setOnRefreshListener {
-            viewModel.base.observe(viewLifecycleOwner){article ->
-                setArticles(article.articles)
-            }
+            fetchArticles()
             swipe.isRefreshing = false
         }
     }
