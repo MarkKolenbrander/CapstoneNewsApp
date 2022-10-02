@@ -4,6 +4,7 @@ import android.content.Context
 
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import java.io.File
 import java.io.FileOutputStream
 import java.net.HttpURLConnection
@@ -20,9 +21,10 @@ class DownloadWorker(context: Context, workerParameters: WorkerParameters)
         connection.doInput = true
         connection.connect()
 
-        val imagePath = "news_image.jpg"
+        val imagePath = "news_image${System.currentTimeMillis()}.jpg"
         val inputStream = connection.inputStream
         val file = File(applicationContext.externalMediaDirs.first(), imagePath)
+
 
         val outputStream = FileOutputStream(file)
         outputStream.use { output ->
@@ -35,8 +37,9 @@ class DownloadWorker(context: Context, workerParameters: WorkerParameters)
 
                 byteCount = inputStream.read(buffer)
             }
-            outputStream.flush()
+            output.flush()
         }
-        return Result.success()
+        val output = workDataOf("image_path" to file.absolutePath)
+        return Result.success(output)
     }
 }

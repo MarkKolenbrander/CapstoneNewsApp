@@ -8,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.work.*
-import com.bumptech.glide.Glide
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentDetailBinding
 import com.markkolenbrander.capstonenewsapp.worker.DownloadWorker
+import com.markkolenbrander.capstonenewsapp.worker.FileClearWorker
+import com.markkolenbrander.capstonenewsapp.worker.SepiaFilterWorker
 import kotlinx.coroutines.*
 
 class DetailFragment : Fragment() {
@@ -38,8 +39,7 @@ class DetailFragment : Fragment() {
         binding.tvArticleContent.text = args.article.content
         binding.tvArticleTitle.text = args.article.title
 
-
-        args.article.urlToImage?.let { onImageDownload(it) }
+        args.article.urlToImage?.let { onImageDownload() }
 
 //        val imgView = binding.ivImgUrl
 //        val item = args.article.urlToImage
@@ -47,34 +47,40 @@ class DetailFragment : Fragment() {
     }
 
 
-    private fun onImageDownload(imageUrl: String) {
+    private fun onImageDownload() {
         val constraints = Constraints.Builder()
             .setRequiresBatteryNotLow(true)
             .setRequiresStorageNotLow(true)
             .setRequiredNetworkType(NetworkType.NOT_ROAMING)
             .build()
 
-        val downloadWorker = OneTimeWorkRequestBuilder<DownloadWorker>()
-            .setInputData(workDataOf("image_path" to imageUrl))
+        val clearFilesWorker = OneTimeWorkRequestBuilder<FileClearWorker>()
+            .build()
+
+        val downloadRequest = OneTimeWorkRequestBuilder<DownloadWorker>()
+            .setInputData(workDataOf("image_path" to args.article.urlToImage))
+            .setConstraints(constraints)
+            .build()
+
+        val sepiaFilterWorker = OneTimeWorkRequestBuilder<SepiaFilterWorker>()
             .setConstraints(constraints)
             .build()
 
         val workManager = context?.let { WorkManager.getInstance(it) }
-        workManager?.enqueue(downloadWorker)
+        workManager?.beginWith(clearFilesWorker)?.then(downloadRequest)?.then(sepiaFilterWorker)?.enqueue()
 
-        workManager?.getWorkInfoByIdLiveData(downloadWorker.id)
+        workManager?.getWorkInfoByIdLiveData(sepiaFilterWorker.id)
             ?.observe(viewLifecycleOwner) { info ->
-                GlobalScope.launch {
+                GlobalScope.launch(Dispatchers.IO) {
                     if (info.state.isFinished) {
-                        val item = args.article.urlToImage
-                        val imageFile =
-                            activity?.let { Glide.with(it).asFile().load(item).submit().get() }
-                        if (imageFile != null) {
-                            displayImage(imageFile.absolutePath)
+
+                        val imagePath = info.outputData.getString("image_path")
+
+                        if (imagePath != null) {
+                            displayImage(imagePath)
                         }
                     }
                 }
-
             }
     }
 
