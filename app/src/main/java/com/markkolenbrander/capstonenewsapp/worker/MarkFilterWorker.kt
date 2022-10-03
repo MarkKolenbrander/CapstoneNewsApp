@@ -8,13 +8,13 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import java.io.FileOutputStream
 
-class SepiaFilterWorker(context: Context, workerParameters: WorkerParameters )
+class MarkFilterWorker (context: Context, workerParameters: WorkerParameters)
     : Worker(context, workerParameters) {
 
     override fun doWork(): Result {
         val imagePath = inputData.getString("image_path") ?: return Result.failure()
         val bitmap = BitmapFactory.decodeFile(imagePath)
-        val newBitmap = ImageUtils.applySepiaFilter(bitmap)
+        val newBitmap = ImageUtils.applyMarkFilter(bitmap)
 
         val outputStream = FileOutputStream(imagePath)
         outputStream.use { output ->

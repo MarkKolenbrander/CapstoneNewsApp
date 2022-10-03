@@ -9,9 +9,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import androidx.work.*
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentDetailBinding
-import com.markkolenbrander.capstonenewsapp.worker.DownloadWorker
-import com.markkolenbrander.capstonenewsapp.worker.FileClearWorker
-import com.markkolenbrander.capstonenewsapp.worker.SepiaFilterWorker
+import com.markkolenbrander.capstonenewsapp.worker.*
 import kotlinx.coroutines.*
 
 class DetailFragment : Fragment() {
@@ -39,7 +37,7 @@ class DetailFragment : Fragment() {
         binding.tvArticleContent.text = args.article.content
         binding.tvArticleTitle.text = args.article.title
 
-        args.article.urlToImage?.let { onImageDownload() }
+        args.article.urlToImage?.let { downloadImage() }
 
 //        val imgView = binding.ivImgUrl
 //        val item = args.article.urlToImage
@@ -47,7 +45,7 @@ class DetailFragment : Fragment() {
     }
 
 
-    private fun onImageDownload() {
+    private fun downloadImage() {
         val constraints = Constraints.Builder()
             .setRequiresBatteryNotLow(true)
             .setRequiresStorageNotLow(true)
@@ -66,8 +64,23 @@ class DetailFragment : Fragment() {
             .setConstraints(constraints)
             .build()
 
+        val markFilterWorker = OneTimeWorkRequestBuilder<MarkFilterWorker>()
+            .setConstraints(constraints)
+            .build()
+
+        val downloadImageWorker = OneTimeWorkRequestBuilder<DownloadImageWorker>()
+            .setConstraints(constraints)
+            .build()
+
+
         val workManager = context?.let { WorkManager.getInstance(it) }
-        workManager?.beginWith(clearFilesWorker)?.then(downloadRequest)?.then(sepiaFilterWorker)?.enqueue()
+        workManager
+            ?.beginWith(clearFilesWorker)
+//            ?.then(downloadImageWorker)
+            ?.then(downloadRequest)
+            ?.then(markFilterWorker)
+            ?.then(sepiaFilterWorker)
+            ?.enqueue()
 
         workManager?.getWorkInfoByIdLiveData(sepiaFilterWorker.id)
             ?.observe(viewLifecycleOwner) { info ->

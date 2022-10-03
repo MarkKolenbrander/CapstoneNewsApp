@@ -27,6 +27,7 @@ class DownloadImageWorker (context: Context, workerParameters: WorkerParameters)
         val outputStream = FileOutputStream(file)
         outputStream.use { output ->
             val buffer = ByteArray(4 * 1024)
+
             var byteCount = inputStream.read(buffer)
 
             while (byteCount > 0) {
