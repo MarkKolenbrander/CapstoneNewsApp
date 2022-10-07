@@ -28,9 +28,9 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvSourceId.text = args.article.source?.name
+        binding.tvSourceId.text = args.article.source.name
         binding.tvSourceDescription.text = args.article.description
-        binding.tvSourceUrl.text = args.article.source?.url
+        binding.tvSourceUrl.text = args.article.source.url
         binding.tvArticleAuthor.text = args.article.author
         binding.tvArticleDescription.text = args.article.url
         binding.tvArticlePublishedAt.text = args.article.publishedAt
@@ -78,11 +78,11 @@ class DetailFragment : Fragment() {
             ?.beginWith(clearFilesWorker)
 //            ?.then(downloadImageWorker)
             ?.then(downloadRequest)
-            ?.then(markFilterWorker)
-            ?.then(sepiaFilterWorker)
+//            ?.then(markFilterWorker)
+//            ?.then(sepiaFilterWorker)
             ?.enqueue()
 
-        workManager?.getWorkInfoByIdLiveData(sepiaFilterWorker.id)
+        workManager?.getWorkInfoByIdLiveData(downloadRequest.id)
             ?.observe(viewLifecycleOwner) { info ->
                 GlobalScope.launch(Dispatchers.IO) {
                     if (info.state.isFinished) {

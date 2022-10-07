@@ -6,16 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import com.markkolenbrander.capstonenewsapp.adapters.ArticleAdapter
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentArticlesListBinding
 import com.markkolenbrander.capstonenewsapp.models.Article
 import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 import com.markkolenbrander.capstonenewsapp.networking.NetworkStatusChecker
-import com.markkolenbrander.capstonenewsapp.networking.buildApiService
 
 class ArticlesListFragment : Fragment() {
 
@@ -24,7 +25,7 @@ class ArticlesListFragment : Fragment() {
         NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
     }
     private val viewModel: ArticleViewModel by viewModels{
-        ArticleViewModel.Factory(newsService = buildApiService())
+        ArticleViewModel.Factory(newsRepo = App.newsRepo)
     }
 
     override fun onCreateView(
@@ -44,10 +45,10 @@ class ArticlesListFragment : Fragment() {
     private fun fetchArticles(){
         networkStatusChecker.performIfConnectedToInternet {
             binding.srLayout.isRefreshing = true
-            viewModel.articleLiveData.observe(viewLifecycleOwner) { articleResult ->
+            viewModel.articles.observe(viewLifecycleOwner) { articleResult ->
                 when(articleResult){
                     is CustomResult.Success -> {
-                        setArticles(articleResult.value.articles)
+                        setArticles(articleResult.value)
                     }
                     is CustomResult.Failure -> {
                         failureDialog()
@@ -96,6 +97,8 @@ class ArticlesListFragment : Fragment() {
     }
 
     private fun noInternet(){
+
+        Snackbar.make(binding.root, "There is no Internet!", Toast.LENGTH_SHORT).show()
 
         binding.rvArticles.visibility = View.GONE
         binding.ivNoInternet.visibility = View.VISIBLE
