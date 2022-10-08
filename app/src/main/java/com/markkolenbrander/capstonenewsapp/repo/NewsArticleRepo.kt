@@ -6,4 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NewsArticleRepo {
     fun getNewsArticles() : Flow<CustomResult<List<Article>>>
+
+    suspend fun searchArticles(search: String) : List<Article>
+
 }

@@ -13,4 +13,7 @@ interface ArticleDao {
 
     @Insert(onConflict = REPLACE)
     suspend fun addArticles(article: List<Article>)
+
+    @Query("SELECT * FROM articles WHERE title LIKE :search")
+    suspend fun searchArticles(search: String) : List<Article>
 }

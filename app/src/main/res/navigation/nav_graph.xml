@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/articlesListFragment"
         android:name="com.markkolenbrander.capstonenewsapp.ArticlesListFragment"
-        android:label="ArticlesListFragment" >
+        android:label="News Articles">
         <action
             android:id="@+id/action_articlesListFragment_to_detailFragment"
             app:destination="@id/detailFragment"
@@ -19,8 +19,8 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.markkolenbrander.capstonenewsapp.DetailFragment"
-        android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" >
+        android:label="Article"
+        tools:layout="@layout/fragment_detail">
         <argument
             android:name="article"
             app:argType="com.markkolenbrander.capstonenewsapp.models.Article" />

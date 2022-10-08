@@ -21,6 +21,7 @@ class App : Application() {
             NewsArticleRepoImpl(database.articleDao(), newsApiService)
         }
 
+
         val gson by lazy {
             Gson()
         }

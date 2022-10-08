@@ -2,15 +2,18 @@ package com.markkolenbrander.capstonenewsapp
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.work.*
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentDetailBinding
 import com.markkolenbrander.capstonenewsapp.worker.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailFragment : Fragment() {
 
@@ -29,19 +32,19 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvSourceId.text = args.article.source.name
-        binding.tvSourceDescription.text = args.article.description
-        binding.tvSourceUrl.text = args.article.source.url
+//        binding.tvSourceDescription.text = args.article.description
+//        binding.tvSourceUrl.text = args.article.source.url
         binding.tvArticleAuthor.text = args.article.author
-        binding.tvArticleDescription.text = args.article.url
+//        binding.tvArticleDescription.text = args.article.url
         binding.tvArticlePublishedAt.text = args.article.publishedAt
         binding.tvArticleContent.text = args.article.content
         binding.tvArticleTitle.text = args.article.title
 
-        args.article.urlToImage?.let { downloadImage() }
-
-//        val imgView = binding.ivImgUrl
-//        val item = args.article.urlToImage
-//        context?.let { Glide.with(it).load(item).into(imgView) }
+        if (args.article.urlToImage.isNullOrEmpty()){
+            binding.ivImgUrl.setImageResource(R.drawable.ic_no_pictures)
+        }else{
+            args.article.urlToImage?.let {  downloadImage() }
+        }
     }
 
 
@@ -100,7 +103,9 @@ class DetailFragment : Fragment() {
     private fun displayImage(imagePath: String) {
         GlobalScope.launch(Dispatchers.Main) {
             val bitmap = loadImageFromFile(imagePath)
+
             binding.ivImgUrl.setImageBitmap(bitmap)
+
         }
     }
 

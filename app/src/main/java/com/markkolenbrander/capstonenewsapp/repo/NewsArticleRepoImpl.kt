@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 
 class NewsArticleRepoImpl(
     private val articleDao: ArticleDao,
-    private val newsApiService: NewsService
+    private val newsApiService: NewsService,
 ) : NewsArticleRepo {
 
     override fun getNewsArticles(): Flow<CustomResult<List<Article>>> {
@@ -35,9 +35,11 @@ class NewsArticleRepoImpl(
             }catch (e: Exception){
                 Log.e(TAG, e.toString())
             }
-
         }
+    }
 
+    override suspend fun searchArticles(search: String): List<Article> {
+        return articleDao.searchArticles(search)
     }
 
     companion object {

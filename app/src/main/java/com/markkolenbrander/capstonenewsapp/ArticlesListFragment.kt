@@ -2,12 +2,13 @@ package com.markkolenbrander.capstonenewsapp
 
 import android.net.ConnectivityManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -15,8 +16,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.markkolenbrander.capstonenewsapp.adapters.ArticleAdapter
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentArticlesListBinding
 import com.markkolenbrander.capstonenewsapp.models.Article
-import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 import com.markkolenbrander.capstonenewsapp.networking.NetworkStatusChecker
+import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 
 class ArticlesListFragment : Fragment() {
 
@@ -40,30 +41,37 @@ class ArticlesListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         fetchArticles()
         swipeToRefresh()
+
+        val queryTextListener = object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let{ searchQuery ->
+                    viewModel.searchArticles(searchQuery)
+                }
+                return true
+            }
+        }
+
+        binding.svSearchView.setOnQueryTextListener(queryTextListener)
     }
 
     private fun fetchArticles(){
-        networkStatusChecker.performIfConnectedToInternet {
-            binding.srLayout.isRefreshing = true
-            viewModel.articles.observe(viewLifecycleOwner) { articleResult ->
-                when(articleResult){
-                    is CustomResult.Success -> {
-                        setArticles(articleResult.value)
-                    }
-                    is CustomResult.Failure -> {
-                        failureDialog()
-                    }
+        binding.srLayout.isRefreshing = true
+        viewModel.articles.observe(viewLifecycleOwner) { articleResult ->
+            when(articleResult){
+                is CustomResult.Success -> {
+                    setArticles(articleResult.value)
                 }
-                binding.srLayout.isRefreshing = false
+                is CustomResult.Failure -> {
+                    failureDialog()
+                }
             }
+            binding.srLayout.isRefreshing = false
         }
-        if (!networkStatusChecker.hasInternetConnection()){
-            noInternet()
-        }else{
-            binding.rvArticles.visibility = View.VISIBLE
-            binding.ivNoInternet.visibility = View.GONE
-            binding.tvNoInternet.visibility = View.GONE
-        }
+
     }
 
     private fun setArticles(articles: List<Article?>){
@@ -97,7 +105,6 @@ class ArticlesListFragment : Fragment() {
     }
 
     private fun noInternet(){
-
         Snackbar.make(binding.root, "There is no Internet!", Toast.LENGTH_SHORT).show()
 
         binding.rvArticles.visibility = View.GONE
@@ -113,4 +120,34 @@ class ArticlesListFragment : Fragment() {
             swipe.isRefreshing = false
         }
     }
+
+    //With Internet check
+
+    //    private fun fetchArticles(){
+//        networkStatusChecker.performIfConnectedToInternet {
+//            binding.srLayout.isRefreshing = true
+//            viewModel.articles.observe(viewLifecycleOwner) { articleResult ->
+//                when(articleResult){
+//                    is CustomResult.Success -> {
+//                        setArticles(articleResult.value)
+//                    }
+//                    is CustomResult.Failure -> {
+//                        failureDialog()
+//                    }
+//                }
+//                binding.srLayout.isRefreshing = false
+//            }
+//        }
+//
+//        if (!networkStatusChecker.hasInternetConnection()){
+//            noInternet()
+//
+//        }else{
+//            binding.rvArticles.visibility = View.VISIBLE
+//            binding.ivNoInternet.visibility = View.GONE
+//            binding.tvNoInternet.visibility = View.GONE
+//
+//        }
+//    }
+
 }
