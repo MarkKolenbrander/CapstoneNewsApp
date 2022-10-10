@@ -1,13 +1,16 @@
 package com.markkolenbrander.capstonenewsapp
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
+import androidx.work.*
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentDetailBinding
+import com.markkolenbrander.capstonenewsapp.worker.*
+import kotlinx.coroutines.*
 
 class DetailFragment : Fragment() {
 
@@ -34,9 +37,74 @@ class DetailFragment : Fragment() {
         binding.tvArticleContent.text = args.article.content
         binding.tvArticleTitle.text = args.article.title
 
-        val imgView = binding.ivImgUrl
-        val item = args.article.urlToImage
-        context?.let { Glide.with(it).load(item).into(imgView) }
+        args.article.urlToImage?.let { downloadImage() }
 
+//        val imgView = binding.ivImgUrl
+//        val item = args.article.urlToImage
+//        context?.let { Glide.with(it).load(item).into(imgView) }
+    }
+
+
+    private fun downloadImage() {
+        val constraints = Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .setRequiresStorageNotLow(true)
+            .setRequiredNetworkType(NetworkType.NOT_ROAMING)
+            .build()
+
+        val clearFilesWorker = OneTimeWorkRequestBuilder<FileClearWorker>()
+            .build()
+
+        val downloadRequest = OneTimeWorkRequestBuilder<DownloadWorker>()
+            .setInputData(workDataOf("image_path" to args.article.urlToImage))
+            .setConstraints(constraints)
+            .build()
+
+        val sepiaFilterWorker = OneTimeWorkRequestBuilder<SepiaFilterWorker>()
+            .setConstraints(constraints)
+            .build()
+
+        val markFilterWorker = OneTimeWorkRequestBuilder<MarkFilterWorker>()
+            .setConstraints(constraints)
+            .build()
+
+        val downloadImageWorker = OneTimeWorkRequestBuilder<DownloadImageWorker>()
+            .setConstraints(constraints)
+            .build()
+
+
+        val workManager = context?.let { WorkManager.getInstance(it) }
+        workManager
+            ?.beginWith(clearFilesWorker)
+//            ?.then(downloadImageWorker)
+            ?.then(downloadRequest)
+            ?.then(markFilterWorker)
+            ?.then(sepiaFilterWorker)
+            ?.enqueue()
+
+        workManager?.getWorkInfoByIdLiveData(sepiaFilterWorker.id)
+            ?.observe(viewLifecycleOwner) { info ->
+                GlobalScope.launch(Dispatchers.IO) {
+                    if (info.state.isFinished) {
+
+                        val imagePath = info.outputData.getString("image_path")
+
+                        if (imagePath != null) {
+                            displayImage(imagePath)
+                        }
+                    }
+                }
+            }
+    }
+
+    private fun displayImage(imagePath: String) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val bitmap = loadImageFromFile(imagePath)
+            binding.ivImgUrl.setImageBitmap(bitmap)
+        }
+    }
+
+    private suspend fun loadImageFromFile(imagePath: String) = withContext(Dispatchers.IO) {
+        BitmapFactory.decodeFile(imagePath)
     }
 }
