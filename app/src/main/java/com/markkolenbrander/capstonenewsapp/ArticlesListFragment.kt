@@ -1,13 +1,14 @@
 package com.markkolenbrander.capstonenewsapp
 
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,18 +17,19 @@ import com.google.android.material.snackbar.Snackbar
 import com.markkolenbrander.capstonenewsapp.adapters.ArticleAdapter
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentArticlesListBinding
 import com.markkolenbrander.capstonenewsapp.models.Article
-import com.markkolenbrander.capstonenewsapp.networking.NetworkStatusChecker
 import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 
 class ArticlesListFragment : Fragment() {
 
     private lateinit var binding : FragmentArticlesListBinding
-    private val networkStatusChecker by lazy {
-        NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
-    }
+//    private val networkStatusChecker by lazy {
+//        NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
+//    }
     private val viewModel: ArticleViewModel by viewModels{
-        ArticleViewModel.Factory(newsRepo = App.newsRepo)
+        ArticleViewModel.Factory(newsRepo = App.newsRepo, prefsStore = App.prefsStore)
     }
+
+    private var mNightModeActive = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,8 +56,18 @@ class ArticlesListFragment : Fragment() {
                 return true
             }
         }
-
         binding.svSearchView.setOnQueryTextListener(queryTextListener)
+
+        viewModel.darkThemeEnabled.observe(viewLifecycleOwner){ nightModeActive ->
+            mNightModeActive = nightModeActive
+
+            val defaultMode = if (nightModeActive){
+                AppCompatDelegate.MODE_NIGHT_YES
+            }else{
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+            AppCompatDelegate.setDefaultNightMode(defaultMode)
+        }
     }
 
     private fun fetchArticles(){
@@ -119,6 +131,13 @@ class ArticlesListFragment : Fragment() {
             fetchArticles()
             swipe.isRefreshing = false
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.app_bar_switch) {
+            viewModel.toggleNightMode()
+        }
+        return true
     }
 
     //With Internet check

@@ -12,6 +12,8 @@
     <color name="green_capstone">#28696A</color>
     <color name="yellow_capstone">#F4AE3F</color>
     <color name="white_capstone">#F0E6D7</color>
+    <color name="grey_capstone">#809E9E9E</color>
+
 
 
 </resources>

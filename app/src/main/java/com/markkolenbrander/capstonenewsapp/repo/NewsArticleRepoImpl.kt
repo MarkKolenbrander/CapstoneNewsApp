@@ -11,6 +11,8 @@ import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
+const val KEY_DARK_THEME = "dark_theme_enabled"
+
 class NewsArticleRepoImpl(
     private val articleDao: ArticleDao,
     private val newsApiService: NewsService,
@@ -41,6 +43,7 @@ class NewsArticleRepoImpl(
     override suspend fun searchArticles(search: String): List<Article> {
         return articleDao.searchArticles(search)
     }
+
 
     companion object {
         private const val TAG = "ArticleRepoImpl"

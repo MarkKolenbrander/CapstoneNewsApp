@@ -2,8 +2,8 @@ package com.markkolenbrander.capstonenewsapp.preferences
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.markkolenbrander.capstonenewsapp.repo.KEY_DARK_THEME
 
-//private const val KEY_DARK_THEME = "dark_theme_enabled"
 //
 //class SharedPrefs (private val preferences: SharedPreferences) {
 //

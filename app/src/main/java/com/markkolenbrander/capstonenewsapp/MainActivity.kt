@@ -1,7 +1,8 @@
 package com.markkolenbrander.capstonenewsapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -31,4 +32,13 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp()
                 || super.onSupportNavigateUp()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.overflow_menu, menu)
+        return true
+    }
+
+
+
+
 }

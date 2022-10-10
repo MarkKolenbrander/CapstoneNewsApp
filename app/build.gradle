@@ -84,5 +84,10 @@ dependencies {
 
     //Preferences DataStore
     implementation 'androidx.datastore:datastore-preferences:1.0.0'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+
+    // Proto DataStore
+    implementation "androidx.datastore:datastore-core:1.1.0-dev01"
+    implementation "com.google.protobuf:protobuf-javalite:3.11.0"
 
 }

@@ -2,6 +2,7 @@ package com.markkolenbrander.capstonenewsapp
 
 import androidx.lifecycle.*
 import com.markkolenbrander.capstonenewsapp.models.Article
+import com.markkolenbrander.capstonenewsapp.prefsstore.PrefsStore
 import com.markkolenbrander.capstonenewsapp.repo.NewsArticleRepo
 import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 import kotlinx.coroutines.Dispatchers.IO
@@ -12,14 +13,14 @@ import kotlinx.coroutines.launch
 const val BASE_URL = "https://newsapi.org/v2/"
 const val API_TOKEN = "9ced23497a9d4184bffbe366d3a804d7"
 
-class ArticleViewModel(private val newsRepo: NewsArticleRepo) : ViewModel() {
+class ArticleViewModel(private val newsRepo: NewsArticleRepo, private val prefsStore: PrefsStore) : ViewModel() {
 
     class Factory(
-        private val newsRepo: NewsArticleRepo,
+        private val newsRepo: NewsArticleRepo, private val prefsStore: PrefsStore
     ): ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ArticleViewModel(newsRepo) as T
+            return ArticleViewModel(newsRepo, prefsStore) as T
         }
     }
 
@@ -45,9 +46,13 @@ class ArticleViewModel(private val newsRepo: NewsArticleRepo) : ViewModel() {
     val articles: LiveData<CustomResult<List<Article>>> = _articles
 
     //--------------------------------------------------------------------------
-//    //TODO: Toggle Darkmode
+
 //    private val _darkThemeEnabled = MutableLiveData<Boolean>()
 //    val darkThemeEnabled: LiveData<Boolean> = _darkThemeEnabled
+//
+//    init {
+//        _darkThemeEnabled.value = sharedPrefs.isDarkThemeEnabled()
+//    }
 //
 //    fun toggleNightMode(){
 //        viewModelScope.launch {
@@ -59,23 +64,11 @@ class ArticleViewModel(private val newsRepo: NewsArticleRepo) : ViewModel() {
 
     //--------------------------------------------------------------------------
 
+    val darkThemeEnabled = prefsStore.isNightMode().asLiveData()
 
-//    val articles: LiveData<CustomResult<List<Article>>> =
-//        newsRepo.getNewsArticles().asLiveData()
-
-
-
-
-//    init {
-//        viewModelScope.launch(IO) {
-//            try {
-//                val response = newsService.getArticles(API_TOKEN, Country.NL, Category.GENERAL)
-//                withContext(Main){
-//                    _articleLiveData.value = CustomResult.Success(response)
-//                }
-//            } catch (e: Exception){
-//                _articleLiveData.value = CustomResult.Failure(e)
-//            }
-//        }
-//    }
+    fun toggleNightMode(){
+        viewModelScope.launch {
+            prefsStore.toggleNightMode()
+        }
+    }
 }

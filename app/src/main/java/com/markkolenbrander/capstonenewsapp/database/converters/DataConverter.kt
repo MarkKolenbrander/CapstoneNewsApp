@@ -2,12 +2,11 @@ package com.markkolenbrander.capstonenewsapp.database.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.reflect.TypeToken
-import com.markkolenbrander.capstonenewsapp.models.Source
 import com.markkolenbrander.capstonenewsapp.App
+import com.markkolenbrander.capstonenewsapp.models.Source
 
 
 class DataConverter {
-
 
     @TypeConverter
     fun fromSources(value: Source): String = App.gson.toJson(value)
