@@ -2,15 +2,19 @@ package com.markkolenbrander.capstonenewsapp
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.work.*
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentDetailBinding
-import com.markkolenbrander.capstonenewsapp.worker.*
-import kotlinx.coroutines.*
+import com.markkolenbrander.capstonenewsapp.worker.DownloadWorker
+import com.markkolenbrander.capstonenewsapp.worker.FileClearWorker
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailFragment : Fragment() {
 
@@ -28,20 +32,20 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvSourceId.text = args.article.source?.name
-        binding.tvSourceDescription.text = args.article.description
-        binding.tvSourceUrl.text = args.article.source?.url
+        binding.tvSourceId.text = args.article.source.name
+//        binding.tvSourceDescription.text = args.article.description
+//        binding.tvSourceUrl.text = args.article.source.url
         binding.tvArticleAuthor.text = args.article.author
-        binding.tvArticleDescription.text = args.article.url
+//        binding.tvArticleDescription.text = args.article.url
         binding.tvArticlePublishedAt.text = args.article.publishedAt
         binding.tvArticleContent.text = args.article.content
         binding.tvArticleTitle.text = args.article.title
 
-        args.article.urlToImage?.let { downloadImage() }
-
-//        val imgView = binding.ivImgUrl
-//        val item = args.article.urlToImage
-//        context?.let { Glide.with(it).load(item).into(imgView) }
+        if (args.article.urlToImage.isNullOrEmpty()){
+            binding.ivImgUrl.setImageResource(R.drawable.ic_no_pictures)
+        }else{
+            args.article.urlToImage?.let {  downloadImage() }
+        }
     }
 
 
@@ -60,17 +64,17 @@ class DetailFragment : Fragment() {
             .setConstraints(constraints)
             .build()
 
-        val sepiaFilterWorker = OneTimeWorkRequestBuilder<SepiaFilterWorker>()
-            .setConstraints(constraints)
-            .build()
+//        val sepiaFilterWorker = OneTimeWorkRequestBuilder<SepiaFilterWorker>()
+//            .setConstraints(constraints)
+//            .build()
 
-        val markFilterWorker = OneTimeWorkRequestBuilder<MarkFilterWorker>()
-            .setConstraints(constraints)
-            .build()
+//        val markFilterWorker = OneTimeWorkRequestBuilder<MarkFilterWorker>()
+//            .setConstraints(constraints)
+//            .build()
 
-        val downloadImageWorker = OneTimeWorkRequestBuilder<DownloadImageWorker>()
-            .setConstraints(constraints)
-            .build()
+//        val downloadImageWorker = OneTimeWorkRequestBuilder<DownloadImageWorker>()
+//            .setConstraints(constraints)
+//            .build()
 
 
         val workManager = context?.let { WorkManager.getInstance(it) }
@@ -78,13 +82,13 @@ class DetailFragment : Fragment() {
             ?.beginWith(clearFilesWorker)
 //            ?.then(downloadImageWorker)
             ?.then(downloadRequest)
-            ?.then(markFilterWorker)
-            ?.then(sepiaFilterWorker)
+//            ?.then(markFilterWorker)
+//            ?.then(sepiaFilterWorker)
             ?.enqueue()
 
-        workManager?.getWorkInfoByIdLiveData(sepiaFilterWorker.id)
+        workManager?.getWorkInfoByIdLiveData(downloadRequest.id)
             ?.observe(viewLifecycleOwner) { info ->
-                GlobalScope.launch(Dispatchers.IO) {
+                lifecycleScope.launch(Dispatchers.IO) {
                     if (info.state.isFinished) {
 
                         val imagePath = info.outputData.getString("image_path")
@@ -98,9 +102,11 @@ class DetailFragment : Fragment() {
     }
 
     private fun displayImage(imagePath: String) {
-        GlobalScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch(Dispatchers.Main) {
             val bitmap = loadImageFromFile(imagePath)
+
             binding.ivImgUrl.setImageBitmap(bitmap)
+
         }
     }
 

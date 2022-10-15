@@ -1,30 +1,28 @@
 package com.markkolenbrander.capstonenewsapp
 
-import android.net.ConnectivityManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SwitchCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import com.markkolenbrander.capstonenewsapp.adapters.ArticleAdapter
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentArticlesListBinding
 import com.markkolenbrander.capstonenewsapp.models.Article
 import com.markkolenbrander.capstonenewsapp.utils.CustomResult
-import com.markkolenbrander.capstonenewsapp.networking.NetworkStatusChecker
-import com.markkolenbrander.capstonenewsapp.networking.buildApiService
 
 class ArticlesListFragment : Fragment() {
 
     private lateinit var binding : FragmentArticlesListBinding
-    private val networkStatusChecker by lazy {
-        NetworkStatusChecker(activity?.getSystemService(ConnectivityManager::class.java))
-    }
+
     private val viewModel: ArticleViewModel by viewModels{
-        ArticleViewModel.Factory(newsService = buildApiService())
+        ArticleViewModel.Factory(newsRepo = App.newsRepo, prefsStore = App.prefsStore)
     }
 
     override fun onCreateView(
@@ -32,37 +30,58 @@ class ArticlesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentArticlesListBinding.inflate(layoutInflater)
+        setHasOptionsMenu(true)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fetchArticles()
+        viewModel.articles.observe(viewLifecycleOwner) { articleResult ->
+            when(articleResult){
+                is CustomResult.Success -> {
+                    setArticles(articleResult.value)
+                }
+                is CustomResult.Failure -> {
+                    failureDialog()
+                }
+                is CustomResult.NoInternet ->{
+                    noInternet()
+                }
+            }
+            binding.srLayout.isRefreshing = false
+        }
+
         swipeToRefresh()
+
+        val queryTextListener = object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let{ searchQuery ->
+                    viewModel.searchArticles(searchQuery)
+                }
+                return true
+            }
+        }
+        binding.svSearchView.setOnQueryTextListener(queryTextListener)
+
+        viewModel.darkThemeEnabled.observe(viewLifecycleOwner){ nightModeActive ->
+
+            val defaultMode = if (nightModeActive){
+                AppCompatDelegate.MODE_NIGHT_YES
+            }else{
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+            AppCompatDelegate.setDefaultNightMode(defaultMode)
+        }
+
     }
 
     private fun fetchArticles(){
-        networkStatusChecker.performIfConnectedToInternet {
-            binding.srLayout.isRefreshing = true
-            viewModel.articleLiveData.observe(viewLifecycleOwner) { articleResult ->
-                when(articleResult){
-                    is CustomResult.Success -> {
-                        setArticles(articleResult.value.articles)
-                    }
-                    is CustomResult.Failure -> {
-                        failureDialog()
-                    }
-                }
-                binding.srLayout.isRefreshing = false
-            }
-        }
-        if (!networkStatusChecker.hasInternetConnection()){
-            noInternet()
-        }else{
-            binding.rvArticles.visibility = View.VISIBLE
-            binding.ivNoInternet.visibility = View.GONE
-            binding.tvNoInternet.visibility = View.GONE
-        }
+        binding.srLayout.isRefreshing = true
+        viewModel.fetchArticles()
     }
 
     private fun setArticles(articles: List<Article?>){
@@ -95,14 +114,6 @@ class ArticlesListFragment : Fragment() {
         binding.ivNoInternet.setImageResource(R.drawable.ic_waiting)
     }
 
-    private fun noInternet(){
-
-        binding.rvArticles.visibility = View.GONE
-        binding.ivNoInternet.visibility = View.VISIBLE
-        binding.tvNoInternet.visibility = View.VISIBLE
-        binding.ivNoInternet.setImageResource(R.drawable.ic_no_wifi)
-    }
-
     private fun swipeToRefresh(){
         val swipe : SwipeRefreshLayout = binding.srLayout
         swipe.setOnRefreshListener {
@@ -110,4 +121,50 @@ class ArticlesListFragment : Fragment() {
             swipe.isRefreshing = false
         }
     }
+
+    private fun noInternet(){
+        Snackbar.make(binding.root, "There is no Internet!", Toast.LENGTH_SHORT).show()
+
+//        binding.rvArticles.visibility = View.GONE
+//        binding.ivNoInternet.visibility = View.VISIBLE
+//        binding.tvNoInternet.visibility = View.VISIBLE
+//        binding.ivNoInternet.setImageResource(R.drawable.ic_no_wifi)
+    }
+
+    // Dark-mode
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.overflow_menu, menu)
+
+        val switchView = menu
+            .findItem(R.id.app_bar_switch_menu_item)
+            .actionView
+            ?.findViewById<SwitchCompat>(R.id.app_bar_switch)
+
+        switchView?.isChecked = viewModel.darkThemeEnabled.value ?: false
+
+        switchView?.setOnCheckedChangeListener { _, _ ->
+            viewModel.toggleNightMode()
+        }
+    }
+
+    //Download over WIFI only - not going tu use this, instead I use the dark-mode switch
+
+//    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
+//        menuInflater.inflate(R.menu.overflow_menu, menu)
+//
+//        val switchView = menu
+//            .findItem(R.id.app_bar_switch_menu_item)
+//            .actionView
+//            ?.findViewById<SwitchCompat>(R.id.app_bar_switch)
+//        viewModel.onlyWifiEnabled.observe(this){
+//            switchView?.isChecked = it
+//        }
+//
+//        switchView?.setOnCheckedChangeListener { _, _ ->
+//            viewModel.downloadOverWifiOnly()
+//        }
+//    }
+
+
+    //--------------------------------------------------------------
 }
