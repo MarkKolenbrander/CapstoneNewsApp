@@ -9,7 +9,4 @@ interface NewsArticleRepo {
 
     suspend fun searchArticles(search: String) : List<Article>
 
-//    fun setDarkThemeEnabled(enabled: Boolean)
-//
-//    fun isDarkThemeEnabled() : Boolean
 }

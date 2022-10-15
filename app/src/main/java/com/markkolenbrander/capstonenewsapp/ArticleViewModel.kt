@@ -16,7 +16,8 @@ const val API_TOKEN = "9ced23497a9d4184bffbe366d3a804d7"
 class ArticleViewModel(private val newsRepo: NewsArticleRepo, private val prefsStore: PrefsStore) : ViewModel() {
 
     class Factory(
-        private val newsRepo: NewsArticleRepo, private val prefsStore: PrefsStore
+        private val newsRepo: NewsArticleRepo,
+        private val prefsStore: PrefsStore
     ): ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -25,6 +26,10 @@ class ArticleViewModel(private val newsRepo: NewsArticleRepo, private val prefsS
     }
 
     init {
+        fetchArticles()
+    }
+
+    fun fetchArticles() {
         viewModelScope.launch(IO) {
             newsRepo
                 .getNewsArticles()
@@ -45,24 +50,6 @@ class ArticleViewModel(private val newsRepo: NewsArticleRepo, private val prefsS
     private val _articles = MutableLiveData<CustomResult<List<Article>>>()
     val articles: LiveData<CustomResult<List<Article>>> = _articles
 
-    //--------------------------------------------------------------------------
-
-//    private val _darkThemeEnabled = MutableLiveData<Boolean>()
-//    val darkThemeEnabled: LiveData<Boolean> = _darkThemeEnabled
-//
-//    init {
-//        _darkThemeEnabled.value = sharedPrefs.isDarkThemeEnabled()
-//    }
-//
-//    fun toggleNightMode(){
-//        viewModelScope.launch {
-//            val darkThemeEnabled = _darkThemeEnabled.value!!
-//            sharedPrefs.setDarkThemeEnabled(!darkThemeEnabled)
-//            _darkThemeEnabled.value = !darkThemeEnabled
-//        }
-//    }
-
-    //--------------------------------------------------------------------------
 
     val darkThemeEnabled = prefsStore.isNightMode().asLiveData()
 
@@ -71,4 +58,13 @@ class ArticleViewModel(private val newsRepo: NewsArticleRepo, private val prefsS
             prefsStore.toggleNightMode()
         }
     }
+
+//    val onlyWifiEnabled = prefsStore.isWifiEnabled().asLiveData()
+//
+//    fun downloadOverWifiOnly(){
+//        viewModelScope.launch {
+//            prefsStore.toggleDownloadOverWifiOnly()
+//        }
+//    }
+
 }

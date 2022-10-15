@@ -6,4 +6,8 @@ interface PrefsStore {
     fun isNightMode(): Flow<Boolean>
 
     suspend fun toggleNightMode()
+
+    fun isWifiEnabled(): Flow<Boolean>
+
+    suspend fun toggleDownloadOverWifiOnly()
 }
