@@ -1,6 +1,7 @@
 package com.markkolenbrander.capstonenewsapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import android.widget.Toast
@@ -20,6 +21,7 @@ import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 class ArticlesListFragment : Fragment() {
 
     private lateinit var binding : FragmentArticlesListBinding
+    private val TAG = this.javaClass.simpleName
 
     private val viewModel: ArticleViewModel by viewModels{
         ArticleViewModel.Factory(newsRepo = App.newsRepo, prefsStore = App.prefsStore)
@@ -37,14 +39,18 @@ class ArticlesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.articles.observe(viewLifecycleOwner) { articleResult ->
+            Log.d(TAG, "onViewCreated")
             when(articleResult){
                 is CustomResult.Success -> {
+                    Log.d(TAG, "Result Success")
                     setArticles(articleResult.value)
                 }
                 is CustomResult.Failure -> {
+                    Log.d(TAG, "Result Failure")
                     failureDialog()
                 }
                 is CustomResult.NoInternet ->{
+                    Log.d(TAG, "Result No Internet")
                     noInternet()
                 }
             }
@@ -98,7 +104,7 @@ class ArticlesListFragment : Fragment() {
         }
     }
 
-    private fun failureDialog(){
+    private fun  failureDialog(){
         val dialogTitle = "We are sorry!"
         val dialogMessage = CustomResult.Failure(Exception("No data")).toString()
         val builder = activity?.let { AlertDialog.Builder(it) }
