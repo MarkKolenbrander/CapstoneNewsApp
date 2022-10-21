@@ -4,7 +4,7 @@ import android.app.Application
 import android.net.ConnectivityManager
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
-import com.markkolenbrander.capstonenewsapp.networking.NetworkStatusChecker
+import com.markkolenbrander.capstonenewsapp.networking.NetworkStatusCheckerImpl
 import com.markkolenbrander.capstonenewsapp.networking.buildApiService
 import com.markkolenbrander.capstonenewsapp.prefsstore.PrefsStore
 import com.markkolenbrander.capstonenewsapp.prefsstore.PrefsStoreImpl
@@ -28,7 +28,7 @@ class App : Application() {
 
         private val networkStatusChecker by lazy {
             val connectivityManger = instance.getSystemService(ConnectivityManager::class.java)
-            NetworkStatusChecker(connectivityManger)
+            NetworkStatusCheckerImpl(connectivityManger)
         }
 
         private val newsApiService by lazy {

@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 const val BASE_URL = "https://newsapi.org/v2/"
 const val API_TOKEN = "9ced23497a9d4184bffbe366d3a804d7"
 
+
 class ArticleViewModel(private val newsRepo: NewsArticleRepo, private val prefsStore: PrefsStore) : ViewModel() {
 
     class Factory(
@@ -31,6 +32,7 @@ class ArticleViewModel(private val newsRepo: NewsArticleRepo, private val prefsS
 
     fun fetchArticles() {
         viewModelScope.launch(IO) {
+//            Log.d("fetchArticles", "fetching")
             newsRepo
                 .getNewsArticles()
                 .onEach { newArticles ->

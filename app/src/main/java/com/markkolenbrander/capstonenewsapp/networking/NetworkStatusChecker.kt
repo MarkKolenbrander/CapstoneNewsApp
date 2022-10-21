@@ -3,7 +3,11 @@ package com.markkolenbrander.capstonenewsapp.networking
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
-class NetworkStatusChecker(private val connectivityManager: ConnectivityManager?) {
+interface NetworkStatusChecker {
+    fun hasInternetConnection() : Boolean
+}
+
+class NetworkStatusCheckerImpl(private val connectivityManager: ConnectivityManager?) : NetworkStatusChecker {
 
 
     inline fun performIfConnectedToInternet(action: () -> Unit) {
@@ -12,7 +16,7 @@ class NetworkStatusChecker(private val connectivityManager: ConnectivityManager?
         }
     }
 
-    fun hasInternetConnection(): Boolean {
+    override fun hasInternetConnection(): Boolean {
         val network = connectivityManager?.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
 

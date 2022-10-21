@@ -48,6 +48,7 @@ class NewsArticleRepoImpl(
                     emit(CustomResult.NoInternet(newsArticlesFromLocalDb))
                 }
             }catch (e: Exception){
+                emit(CustomResult.Failure(e))
                 Log.e(TAG, e.toString())
             }
         }
