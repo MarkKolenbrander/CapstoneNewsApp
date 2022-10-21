@@ -45,9 +45,8 @@ class NewsArticleRepoTests {
     }
 
     @Test fun `a list of articles is returned`() = runBlocking {
-        val api = mockApiService
 
-        coEvery { api.getArticles(API_TOKEN, Country.NL, Category.GENERAL) } returns ArticlesResponse(
+        coEvery { mockApiService.getArticles(API_TOKEN, Country.NL, Category.GENERAL) } returns ArticlesResponse(
             "status",1, listOf(Article(
                 Source("id","name","description","url", Category.GENERAL, Language.NL, Country.NL),
                 "author",
@@ -55,8 +54,20 @@ class NewsArticleRepoTests {
             )
             )
         )
-        val articles = api.getArticles(API_TOKEN,Country.NL, Category.GENERAL)
+        val articles = mockApiService.getArticles(API_TOKEN,Country.NL, Category.GENERAL)
         assertEquals(1, articles.articles.size)
+
+//        val expectedListOfArticles = listOf<Article>(
+//            Article(
+//                Source("id","name","description","url", Category.GENERAL, Language.NL, Country.NL),
+//                "author",
+//                "title" , "description", "url", "urlImage", "published", "content",
+//            )
+//        )
+//
+//        val articlesNew = sut.getNewsArticles().first()
+//        assertEquals((CustomResult.Success(expectedListOfArticles.size)), articlesNew)
+
     }
 
 

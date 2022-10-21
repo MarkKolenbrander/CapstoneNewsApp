@@ -50,25 +50,25 @@ class ArticleViewModelTest{
         ), viewModel.articles)
     }
 
-    @Test
-    fun searchArticles_gives_back_list_of_articles() = runBlocking {
-
-        val mockkNewsRepo = mockk<NewsArticleRepoImpl>()
-        val mockkPrefsStore = mockk<PrefsStore>()
-        val viewModel = ArticleViewModel(mockkNewsRepo, mockkPrefsStore)
-
-        val expectedListOfArticles = listOf<Article>(
-            Article(
-                Source("id","name","description","url", Category.GENERAL, Language.NL, Country.NL),
-                "author",
-                "title" , "description", "url", "urlImage", "published", "content",
-            )
-        )
-        coEvery { mockkNewsRepo.searchArticles("name") } returns expectedListOfArticles
-
-        val result = viewModel.searchArticles("name")
-        assertEquals(CustomResult.Success(expectedListOfArticles), result)
-
-    }
+//    @Test
+//    fun searchArticles_gives_back_list_of_articles() = runBlocking {
+//
+//        val mockkNewsRepo = mockk<NewsArticleRepoImpl>()
+//        val mockkPrefsStore = mockk<PrefsStore>()
+//        val viewModel = ArticleViewModel(mockkNewsRepo, mockkPrefsStore)
+//
+//        val expectedListOfArticles = listOf<Article>(
+//            Article(
+//                Source("id","name","description","url", Category.GENERAL, Language.NL, Country.NL),
+//                "author",
+//                "title" , "description", "url", "urlImage", "published", "content",
+//            )
+//        )
+//        coEvery { mockkNewsRepo.searchArticles("name") } returns expectedListOfArticles
+//
+//        val result = viewModel.searchArticles("name")
+//        assertEquals(CustomResult.Success(expectedListOfArticles), result)
+//
+//    }
 
 }
