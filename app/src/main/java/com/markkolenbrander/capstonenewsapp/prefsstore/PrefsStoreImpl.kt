@@ -8,10 +8,10 @@ import androidx.datastore.preferences.core.emptyPreferences
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import javax.inject.Inject
 
 
-
-class PrefsStoreImpl (private val dataStore: DataStore<Preferences>) : PrefsStore {
+class PrefsStoreImpl @Inject constructor(private val dataStore: DataStore<Preferences>) : PrefsStore {
 
     private object PreferencesKeys{
         val NIGHT_MODE_KEY = booleanPreferencesKey("dark_theme_enabled")

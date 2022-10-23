@@ -2,12 +2,14 @@ package com.markkolenbrander.capstonenewsapp.networking
 
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import javax.inject.Inject
 
 interface NetworkStatusChecker {
     fun hasInternetConnection() : Boolean
 }
 
-class NetworkStatusCheckerImpl(private val connectivityManager: ConnectivityManager?) : NetworkStatusChecker {
+
+class NetworkStatusCheckerImpl @Inject constructor (private val connectivityManager: ConnectivityManager?) : NetworkStatusChecker {
 
 
     inline fun performIfConnectedToInternet(action: () -> Unit) {

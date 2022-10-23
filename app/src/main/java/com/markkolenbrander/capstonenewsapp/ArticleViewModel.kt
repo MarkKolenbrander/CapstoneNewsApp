@@ -5,16 +5,18 @@ import com.markkolenbrander.capstonenewsapp.models.Article
 import com.markkolenbrander.capstonenewsapp.prefsstore.PrefsStore
 import com.markkolenbrander.capstonenewsapp.repo.NewsArticleRepo
 import com.markkolenbrander.capstonenewsapp.utils.CustomResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 const val BASE_URL = "https://newsapi.org/v2/"
 const val API_TOKEN = "9ced23497a9d4184bffbe366d3a804d7"
 
-
-class ArticleViewModel(private val newsRepo: NewsArticleRepo, private val prefsStore: PrefsStore) : ViewModel() {
+@HiltViewModel
+class ArticleViewModel @Inject constructor(private val newsRepo: NewsArticleRepo, private val prefsStore: PrefsStore) : ViewModel() {
 
     class Factory(
         private val newsRepo: NewsArticleRepo,
