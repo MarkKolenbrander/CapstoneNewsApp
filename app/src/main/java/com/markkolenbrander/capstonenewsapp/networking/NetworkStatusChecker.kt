@@ -12,11 +12,18 @@ interface NetworkStatusChecker {
 class NetworkStatusCheckerImpl @Inject constructor (private val connectivityManager: ConnectivityManager?) : NetworkStatusChecker {
 
 
-    inline fun performIfConnectedToInternet(action: () -> Unit) {
-        if (hasInternetConnection()) {
-            action()
-        }
-    }
+//    inline fun performIfConnectedToInternet(action: () -> Unit) {
+//        if (hasInternetConnection()) {
+//            action()
+//        }
+//    }
+
+//    fun isConnectedToWifi(): Boolean {
+//        val network = connectivityManager?.activeNetwork ?: return false
+//        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+//
+//        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+//    }
 
     override fun hasInternetConnection(): Boolean {
         val network = connectivityManager?.activeNetwork ?: return false
@@ -27,10 +34,5 @@ class NetworkStatusCheckerImpl @Inject constructor (private val connectivityMana
                 || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
     }
 
-    fun isConnectedToWifi(): Boolean {
-        val network = connectivityManager?.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
 
-        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-    }
 }

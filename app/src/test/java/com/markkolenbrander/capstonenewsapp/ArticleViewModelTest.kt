@@ -7,68 +7,50 @@ import com.markkolenbrander.capstonenewsapp.repo.NewsArticleRepoImpl
 import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 import io.mockk.coEvery
 import io.mockk.mockk
-import io.mockk.mockkObject
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
 class ArticleViewModelTest{
 
-    @ExperimentalCoroutinesApi
-    @get:Rule
-    var coroutineTestRule = CoroutinesTestRule()
+    @Rule
+    @JvmField
+    val instantExecutorRule = InstantTaskExecutorRule()
 
-    //is a rule that swaps out that executor and replaces it with synchronous one
-    @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
+    private lateinit var objectUnderTest: ArticleViewModel
+//    private lateinit var funService: FakeService
+    private val mockkNewsRepo = mockk<NewsArticleRepoImpl>()
+    private val mockkPrefsStore = mockk<PrefsStore>()
+
+    @Before
+    fun setUp() {
+        objectUnderTest = ArticleViewModel(newsRepo = mockkNewsRepo, prefsStore = mockkPrefsStore )
+    }
 
     @Test
     fun fetch_articles_returns_data() = runBlocking {
-        val mockkNewsRepo = mockk<NewsArticleRepoImpl>()
-        val mockkPrefsStore = mockk<PrefsStore>()
 
-        mockkObject(NewsArticleRepoImpl)
+//        mockkObject(NewsArticleRepoImpl)
 
         coEvery { mockkNewsRepo.getNewsArticles() } returns flow{
-            CustomResult.Success(Article(
+            CustomResult.Success(
+                Article(
                 Source("id","name","description","url", Category.GENERAL, Language.NL, Country.NL),
                 "author",
                 "title" , "description", "url", "urlImage", "published", "content",
-            ))
+            )
+            )
         }
-
-        val viewModel = ArticleViewModel(mockkNewsRepo, mockkPrefsStore)
-        viewModel.fetchArticles()
+        objectUnderTest.fetchArticles()
 
         assertEquals( Article(
             Source("id","name","description","url", Category.GENERAL, Language.NL, Country.NL),
             "author",
             "title" , "description", "url", "urlImage", "published", "content",
-        ), viewModel.articles)
+        ), objectUnderTest.articles)
     }
-
-//    @Test
-//    fun searchArticles_gives_back_list_of_articles() = runBlocking {
-//
-//        val mockkNewsRepo = mockk<NewsArticleRepoImpl>()
-//        val mockkPrefsStore = mockk<PrefsStore>()
-//        val viewModel = ArticleViewModel(mockkNewsRepo, mockkPrefsStore)
-//
-//        val expectedListOfArticles = listOf<Article>(
-//            Article(
-//                Source("id","name","description","url", Category.GENERAL, Language.NL, Country.NL),
-//                "author",
-//                "title" , "description", "url", "urlImage", "published", "content",
-//            )
-//        )
-//        coEvery { mockkNewsRepo.searchArticles("name") } returns expectedListOfArticles
-//
-//        val result = viewModel.searchArticles("name")
-//        assertEquals(CustomResult.Success(expectedListOfArticles), result)
-//
-//    }
 
 }

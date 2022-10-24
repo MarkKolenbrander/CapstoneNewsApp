@@ -7,7 +7,7 @@ import com.markkolenbrander.capstonenewsapp.models.Source
 
 class DataConverter {
 
-    val gson = Gson()
+    private val gson = Gson()
 
     @TypeConverter
     fun fromSources(value: Source): String = gson.toJson(value)
