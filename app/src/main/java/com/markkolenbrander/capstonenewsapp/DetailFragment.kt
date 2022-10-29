@@ -12,10 +12,12 @@ import androidx.work.*
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentDetailBinding
 import com.markkolenbrander.capstonenewsapp.worker.DownloadWorker
 import com.markkolenbrander.capstonenewsapp.worker.FileClearWorker
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
     private lateinit var binding: FragmentDetailBinding

@@ -28,7 +28,7 @@ class NewsArticleRepoTests {
     @Test
     fun `get articles returns data`() = runBlocking {
 //        val expectedListOfArticles = emptyList<Article>()
-        val expectedListOfArticles = listOf<Article>(
+        val expectedListOfArticles = listOf(
             Article(
             Source("id","name","description","url", Category.GENERAL, Language.NL, Country.NL),
             "author",
@@ -44,18 +44,18 @@ class NewsArticleRepoTests {
         coVerify (exactly = 0){ mockApiService.getArticles(API_TOKEN, Country.NL,Category.GENERAL ) }
     }
 
-    @Test fun `a list of articles is returned`() = runBlocking {
-
-        coEvery { mockApiService.getArticles(API_TOKEN, Country.NL, Category.GENERAL) } returns ArticlesResponse(
-            "status",1, listOf(Article(
-                Source("id","name","description","url", Category.GENERAL, Language.NL, Country.NL),
-                "author",
-                "title" , "description", "url", "urlImage", "published", "content",
-            )
-            )
-        )
-        val articles = mockApiService.getArticles(API_TOKEN,Country.NL, Category.GENERAL)
-        assertEquals(1, articles.articles.size)
+//    @Test fun `a list of articles is returned`() = runBlocking {
+//
+//        coEvery { mockApiService.getArticles(API_TOKEN, Country.NL, Category.GENERAL) } returns ArticlesResponse(
+//            "status",1, listOf(Article(
+//                Source("id","name","description","url", Category.GENERAL, Language.NL, Country.NL),
+//                "author",
+//                "title" , "description", "url", "urlImage", "published", "content",
+//            )
+//            )
+//        )
+//        val articles = mockApiService.getArticles(API_TOKEN,Country.NL, Category.GENERAL)
+//        assertEquals(1, articles.articles.size)
 
 //        val expectedListOfArticles = listOf<Article>(
 //            Article(
@@ -67,8 +67,5 @@ class NewsArticleRepoTests {
 //
 //        val articlesNew = sut.getNewsArticles().first()
 //        assertEquals((CustomResult.Success(expectedListOfArticles.size)), articlesNew)
-
-    }
-
 
 }

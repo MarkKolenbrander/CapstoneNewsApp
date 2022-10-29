@@ -16,15 +16,26 @@ import com.google.android.material.snackbar.Snackbar
 import com.markkolenbrander.capstonenewsapp.adapters.ArticleAdapter
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentArticlesListBinding
 import com.markkolenbrander.capstonenewsapp.models.Article
+import com.markkolenbrander.capstonenewsapp.prefsstore.PrefsStore
+import com.markkolenbrander.capstonenewsapp.repo.NewsArticleRepo
 import com.markkolenbrander.capstonenewsapp.utils.CustomResult
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ArticlesListFragment : Fragment() {
 
     private lateinit var binding : FragmentArticlesListBinding
     private val TAG = this.javaClass.simpleName
 
+    @Inject
+    lateinit var newsArticleRepo: NewsArticleRepo
+
+    @Inject
+    lateinit var prefsStore: PrefsStore
+
     private val viewModel: ArticleViewModel by viewModels{
-        ArticleViewModel.Factory(newsRepo = App.newsRepo, prefsStore = App.prefsStore)
+        ArticleViewModel.Factory(newsRepo = newsArticleRepo, prefsStore = prefsStore)
     }
 
     override fun onCreateView(

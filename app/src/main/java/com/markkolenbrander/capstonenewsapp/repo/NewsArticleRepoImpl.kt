@@ -12,8 +12,9 @@ import com.markkolenbrander.capstonenewsapp.networking.NewsService
 import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class NewsArticleRepoImpl(
+class NewsArticleRepoImpl @Inject constructor(
     private val articleDao: ArticleDao,
     private val sourceDao: SourceDao,
     private val newsApiService: NewsService,
