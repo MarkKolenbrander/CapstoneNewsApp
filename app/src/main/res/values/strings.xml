@@ -7,4 +7,5 @@
     <string name="refresh">REFRESH</string>
     <string name="internet_problem">It seems like there is no internet connection. Check your settings to receive the news articles</string>
     <string name="article_image">article_image</string>
+    <string name="news_articles_title">News Articles</string>
 </resources>

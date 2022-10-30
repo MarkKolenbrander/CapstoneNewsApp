@@ -8,12 +8,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import androidx.compose.material3.MaterialTheme
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
-import com.markkolenbrander.capstonenewsapp.adapters.ArticleAdapter
+import com.markkolenbrander.capstonenewsapp.composable.ArticleNewsItem
 import com.markkolenbrander.capstonenewsapp.databinding.FragmentArticlesListBinding
 import com.markkolenbrander.capstonenewsapp.models.Article
 import com.markkolenbrander.capstonenewsapp.prefsstore.PrefsStore
@@ -54,7 +54,8 @@ class ArticlesListFragment : Fragment() {
             when(articleResult){
                 is CustomResult.Success -> {
                     Log.d(TAG, "Result Success")
-                    setArticles(articleResult.value)
+//                    setArticles(articleResult.value)
+                    setArticlesCompose(articleResult.value)
                 }
                 is CustomResult.Failure -> {
                     Log.d(TAG, "Result Failure")
@@ -65,10 +66,10 @@ class ArticlesListFragment : Fragment() {
                     noInternet()
                 }
             }
-            binding.srLayout.isRefreshing = false
+//            binding.srLayout.isRefreshing = false
         }
 
-        swipeToRefresh()
+//        swipeToRefresh()
 
         val queryTextListener = object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -97,23 +98,36 @@ class ArticlesListFragment : Fragment() {
     }
 
     private fun fetchArticles(){
-        binding.srLayout.isRefreshing = true
+//        binding.srLayout.isRefreshing = true
         viewModel.fetchArticles()
     }
 
-    private fun setArticles(articles: List<Article?>){
-
-        val articleAdapter = ArticleAdapter(articles) { article ->
-            val direction =
-                ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(
-                    article
-                )
-            findNavController().navigate(direction)
-        }
-        binding.rvArticles.run {
-            adapter = articleAdapter
+    //Compose Function
+    private fun setArticlesCompose(articles: List<Article>){
+        binding.composeView.setContent {
+            MaterialTheme {
+                ArticleNewsItem(article = articles){ article ->
+                    val direction =
+                ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(article)
+                    findNavController().navigate(direction)
+                }
+            }
         }
     }
+
+//    private fun setArticles(articles: List<Article?>){
+//
+//        val articleAdapter = ArticleAdapter(articles) { article ->
+//            val direction =
+//                ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(
+//                    article
+//                )
+//            findNavController().navigate(direction)
+//        }
+//        binding.rvArticles.run {
+//            adapter = articleAdapter
+//        }
+//    }
 
     private fun  failureDialog(){
         val dialogTitle = "We are sorry!"
@@ -131,13 +145,13 @@ class ArticlesListFragment : Fragment() {
         binding.ivNoInternet.setImageResource(R.drawable.ic_waiting)
     }
 
-    private fun swipeToRefresh(){
-        val swipe : SwipeRefreshLayout = binding.srLayout
-        swipe.setOnRefreshListener {
-            fetchArticles()
-            swipe.isRefreshing = false
-        }
-    }
+//    private fun swipeToRefresh(){
+//        val swipe : SwipeRefreshLayout = binding.srLayout
+//        swipe.setOnRefreshListener {
+//            fetchArticles()
+//            swipe.isRefreshing = false
+//        }
+//    }
 
     private fun noInternet(){
         Snackbar.make(binding.root, "There is no Internet!", Toast.LENGTH_SHORT).show()

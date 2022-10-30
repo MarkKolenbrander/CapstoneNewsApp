@@ -6,11 +6,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/sr_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/sr_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        >-->
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -33,14 +33,19 @@
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_articles"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="visible"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/rv_articles"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:visibility="visible"-->
+<!--                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">-->
 
-                </androidx.recyclerview.widget.RecyclerView>
+<!--                </androidx.recyclerview.widget.RecyclerView>-->
+
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/composeView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
             </LinearLayout>
 
@@ -75,7 +80,7 @@
 
         </FrameLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
