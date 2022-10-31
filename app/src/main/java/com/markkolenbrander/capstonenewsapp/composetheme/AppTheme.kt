@@ -31,6 +31,7 @@ fun AppTheme(
     val rememberedColors = remember { colors.copy() }.apply { updateColorsFrom(colors) }
     CompositionLocalProvider(
         LocalColors provides rememberedColors,
+        LocalDarkColors provides rememberedColors,
         LocalDimensions provides dimensions,
         LocalTypography provides typography
     ) {

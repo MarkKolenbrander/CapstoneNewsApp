@@ -6,12 +6,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,7 +24,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.markkolenbrander.capstonenewsapp.R
 import com.markkolenbrander.capstonenewsapp.composetheme.AppTheme
-import com.markkolenbrander.capstonenewsapp.models.Article
+import com.markkolenbrander.capstonenewsapp.models.*
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.delay
@@ -60,7 +62,7 @@ fun ArticleNewsItem(article: List<Article>, onItemClicked: (Article) -> Unit) {
                                     imageModel = { article.urlToImage},
                                     modifier = Modifier
                                         .height(70.dp)
-                                        .width(70.dp),
+                                        .width(70.dp).clip(RoundedCornerShape(10.dp)),
                                     imageOptions = ImageOptions(
                                         contentScale = ContentScale.Crop,
                                         alignment = Alignment.Center,
@@ -110,41 +112,44 @@ fun ArticleNewsItem(article: List<Article>, onItemClicked: (Article) -> Unit) {
     }
 }
 
-//@Preview
-//@Composable
-//fun PreviewList() {
-//    ArticleNewsItem(
-//        listOf(
-//            Article(
-//                Source(
-//                "ID 1",
-//                "Name",
-//                "Description",
-//                "www.url.com",
-//                Category.GENERAL,
-//                Language.NL,
-//                Country.NL
-//            ),
-//                "Author",
-//                "The Title",
-//                "Description",
-//                "www.urlTest2.com", "www.imgURL.com", "2022-10-29", "The Content",
-//            ),
-//            Article(
-//                Source(
-//                    "ID 1",
-//                    "Name",
-//                    "Description",
-//                    "www.url.com",
-//                    Category.GENERAL,
-//                    Language.NL,
-//                    Country.NL
-//                ),
-//                "Author",
-//                "The Title",
-//                "Description",
-//                "www.urlTest2.com", "www.imgURL.com", "2022-10-29", "The Content",
-//            ),
-//        )
-//    )
-//}
+
+@Composable
+fun PreviewList() {
+    ArticleNewsItem(
+        listOf(
+            Article(
+                Source(
+                "ID 1",
+                "Name",
+                "Description",
+                "www.url.com",
+                Category.GENERAL,
+                Language.NL,
+                Country.NL
+            ),
+                "Author",
+                "The Title",
+                "Description",
+                "www.urlTest2.com", "www.imgURL.com", "2022-10-29", "The Content",
+            ),
+            Article(
+                Source(
+                    "ID 1",
+                    "Name",
+                    "Description",
+                    "www.url.com",
+                    Category.GENERAL,
+                    Language.NL,
+                    Country.NL
+                ),
+                "Author",
+                "The Title",
+                "Description",
+                "www.urlTest2.com", "www.imgURL.com", "2022-10-29", "The Content",
+            ),
+        )
+    )
+    { article ->
+        (article)
+    }
+}

@@ -28,8 +28,8 @@
                 <SearchView
                     android:id="@+id/sv_search_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/grey_capstone"
+                    android:layout_height="38dp"
+                    android:background="@drawable/search_bar_back_ground"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp" />
 
@@ -62,7 +62,7 @@
                     android:padding="16dp"
                     android:text="@string/internet_problem"
                     android:textAlignment="center"
-                    android:textColor="@color/blue_capstone"
+                    android:textColor="@color/white_capstone"
                     android:textSize="18sp"
                     android:visibility="gone" />
 

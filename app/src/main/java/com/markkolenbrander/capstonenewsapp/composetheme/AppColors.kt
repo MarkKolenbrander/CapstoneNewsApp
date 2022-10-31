@@ -106,3 +106,5 @@ private val colorDarkBackground = Color(0xFFFFFFFF)
 private val colorDarkError = Color(0xFFD62222)
 
 internal val LocalColors = staticCompositionLocalOf{ lightColors() }
+
+internal val LocalDarkColors = staticCompositionLocalOf{ darkColors() }
