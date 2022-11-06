@@ -1,14 +1,12 @@
 package com.markkolenbrander.capstonenewsapp
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
-import androidx.compose.material3.MaterialTheme
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,6 +16,7 @@ import com.markkolenbrander.capstonenewsapp.databinding.FragmentArticlesListBind
 import com.markkolenbrander.capstonenewsapp.models.Article
 import com.markkolenbrander.capstonenewsapp.prefsstore.PrefsStore
 import com.markkolenbrander.capstonenewsapp.repo.NewsArticleRepo
+import com.markkolenbrander.capstonenewsapp.theme.AppTheme
 import com.markkolenbrander.capstonenewsapp.utils.CustomResult
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,7 +25,6 @@ import javax.inject.Inject
 class ArticlesListFragment : Fragment() {
 
     private lateinit var binding : FragmentArticlesListBinding
-    private val TAG = this.javaClass.simpleName
 
     @Inject
     lateinit var newsArticleRepo: NewsArticleRepo
@@ -43,6 +41,7 @@ class ArticlesListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentArticlesListBinding.inflate(layoutInflater)
+        @Suppress("DEPRECATION")
         setHasOptionsMenu(true)
         return binding.root
     }
@@ -50,26 +49,19 @@ class ArticlesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.articles.observe(viewLifecycleOwner) { articleResult ->
-            Log.d(TAG, "onViewCreated")
             when(articleResult){
                 is CustomResult.Success -> {
-                    Log.d(TAG, "Result Success")
-//                    setArticles(articleResult.value)
                     setArticlesCompose(articleResult.value)
                 }
                 is CustomResult.Failure -> {
-                    Log.d(TAG, "Result Failure")
                     failureDialog()
                 }
                 is CustomResult.NoInternet ->{
-                    Log.d(TAG, "Result No Internet")
                     noInternet()
+                    setArticlesCompose(articleResult.value)
                 }
             }
-//            binding.srLayout.isRefreshing = false
         }
-
-//        swipeToRefresh()
 
         val queryTextListener = object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -97,15 +89,10 @@ class ArticlesListFragment : Fragment() {
 
     }
 
-    private fun fetchArticles(){
-//        binding.srLayout.isRefreshing = true
-        viewModel.fetchArticles()
-    }
-
     //Compose Function
     private fun setArticlesCompose(articles: List<Article>){
         binding.composeView.setContent {
-            MaterialTheme {
+            AppTheme {
                 ArticleNewsItem(article = articles){ article ->
                     val direction =
                 ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(article)
@@ -114,20 +101,6 @@ class ArticlesListFragment : Fragment() {
             }
         }
     }
-
-//    private fun setArticles(articles: List<Article?>){
-//
-//        val articleAdapter = ArticleAdapter(articles) { article ->
-//            val direction =
-//                ArticlesListFragmentDirections.actionArticlesListFragmentToDetailFragment(
-//                    article
-//                )
-//            findNavController().navigate(direction)
-//        }
-//        binding.rvArticles.run {
-//            adapter = articleAdapter
-//        }
-//    }
 
     private fun  failureDialog(){
         val dialogTitle = "We are sorry!"
@@ -145,13 +118,6 @@ class ArticlesListFragment : Fragment() {
         binding.ivNoInternet.setImageResource(R.drawable.ic_waiting)
     }
 
-//    private fun swipeToRefresh(){
-//        val swipe : SwipeRefreshLayout = binding.srLayout
-//        swipe.setOnRefreshListener {
-//            fetchArticles()
-//            swipe.isRefreshing = false
-//        }
-//    }
 
     private fun noInternet(){
         Snackbar.make(binding.root, "There is no Internet!", Toast.LENGTH_SHORT).show()
@@ -162,7 +128,8 @@ class ArticlesListFragment : Fragment() {
 //        binding.ivNoInternet.setImageResource(R.drawable.ic_no_wifi)
     }
 
-    // Dark-mode
+
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.overflow_menu, menu)
 
@@ -177,25 +144,4 @@ class ArticlesListFragment : Fragment() {
             viewModel.toggleNightMode()
         }
     }
-
-    //Download over WIFI only - not going tu use this, instead I use the dark-mode switch
-
-//    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
-//        menuInflater.inflate(R.menu.overflow_menu, menu)
-//
-//        val switchView = menu
-//            .findItem(R.id.app_bar_switch_menu_item)
-//            .actionView
-//            ?.findViewById<SwitchCompat>(R.id.app_bar_switch)
-//        viewModel.onlyWifiEnabled.observe(this){
-//            switchView?.isChecked = it
-//        }
-//
-//        switchView?.setOnCheckedChangeListener { _, _ ->
-//            viewModel.downloadOverWifiOnly()
-//        }
-//    }
-
-
-    //--------------------------------------------------------------
 }

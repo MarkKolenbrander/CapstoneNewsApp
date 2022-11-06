@@ -1,86 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
+    <FrameLayout
+        style="@style/Theme.CapstoneNewsApp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ArticleListFragment"
+        >
 
-<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-<!--        android:id="@+id/sr_layout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        >-->
-
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ArticleListFragment"
-            >
+            android:padding="4dp"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <SearchView
+                android:theme="@style/SearchBarStyle"
+                android:id="@+id/sv_search_view"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@drawable/search_bar_back_ground"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp" />
+
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/composeView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_no_internet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="60dp"
+                android:padding="16dp"
+                android:text="@string/internet_problem"
+                android:textAlignment="center"
+                android:textColor="@color/white_capstone"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/iv_no_internet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="4dp"
-                android:background="@color/blue_capstone"
-                android:orientation="vertical">
+                android:contentDescription="@string/no_internet"
+                android:padding="16dp"
+                android:src="@drawable/ic_no_wifi"
+                android:visibility="gone" />
 
-                <SearchView
-                    android:id="@+id/sv_search_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="38dp"
-                    android:background="@drawable/search_bar_back_ground"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp" />
+        </RelativeLayout>
 
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:id="@+id/rv_articles"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:visibility="visible"-->
-<!--                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">-->
-
-<!--                </androidx.recyclerview.widget.RecyclerView>-->
-
-                <androidx.compose.ui.platform.ComposeView
-                    android:id="@+id/composeView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/tv_no_internet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="60dp"
-                    android:padding="16dp"
-                    android:text="@string/internet_problem"
-                    android:textAlignment="center"
-                    android:textColor="@color/white_capstone"
-                    android:textSize="18sp"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/iv_no_internet"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/no_internet"
-                    android:padding="16dp"
-                    android:src="@drawable/ic_no_wifi"
-                    android:visibility="gone" />
-
-            </RelativeLayout>
-
-
-        </FrameLayout>
-
-<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

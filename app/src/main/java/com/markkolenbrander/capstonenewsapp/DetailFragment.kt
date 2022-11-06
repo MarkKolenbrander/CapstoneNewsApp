@@ -35,21 +35,17 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvSourceId.text = args.article.source.name
-//        binding.tvSourceDescription.text = args.article.description
-//        binding.tvSourceUrl.text = args.article.source.url
         binding.tvArticleAuthor.text = args.article.author
-//        binding.tvArticleDescription.text = args.article.url
         binding.tvArticlePublishedAt.text = args.article.publishedAt
         binding.tvArticleContent.text = args.article.content
         binding.tvArticleTitle.text = args.article.title
 
         if (args.article.urlToImage.isNullOrEmpty()){
-            binding.ivImgUrl.setImageResource(R.drawable.ic_no_pictures)
+            binding.ivImgUrl.setImageResource(R.drawable.ic_no_image_available)
         }else{
             args.article.urlToImage?.let {  downloadImage() }
         }
     }
-
 
     private fun downloadImage() {
         val constraints = Constraints.Builder()
@@ -66,26 +62,10 @@ class DetailFragment : Fragment() {
             .setConstraints(constraints)
             .build()
 
-//        val sepiaFilterWorker = OneTimeWorkRequestBuilder<SepiaFilterWorker>()
-//            .setConstraints(constraints)
-//            .build()
-
-//        val markFilterWorker = OneTimeWorkRequestBuilder<MarkFilterWorker>()
-//            .setConstraints(constraints)
-//            .build()
-
-//        val downloadImageWorker = OneTimeWorkRequestBuilder<DownloadImageWorker>()
-//            .setConstraints(constraints)
-//            .build()
-
-
         val workManager = context?.let { WorkManager.getInstance(it) }
         workManager
             ?.beginWith(clearFilesWorker)
-//            ?.then(downloadImageWorker)
             ?.then(downloadRequest)
-//            ?.then(markFilterWorker)
-//            ?.then(sepiaFilterWorker)
             ?.enqueue()
 
         workManager?.getWorkInfoByIdLiveData(downloadRequest.id)
@@ -106,9 +86,7 @@ class DetailFragment : Fragment() {
     private fun displayImage(imagePath: String) {
         lifecycleScope.launch(Dispatchers.Main) {
             val bitmap = loadImageFromFile(imagePath)
-
             binding.ivImgUrl.setImageBitmap(bitmap)
-
         }
     }
 

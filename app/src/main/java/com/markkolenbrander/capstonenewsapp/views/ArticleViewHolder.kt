@@ -8,9 +8,4 @@ class ArticleViewHolder(private val articleView: ArticleView) : RecyclerView.Vie
     fun bindData(article: Article){
         articleView.setArticleData(article)
     }
-
-//    fun bindData(article: Article, onDeleteTapped: () -> Unit){
-//        articleView.setArticleData(article, onDeleteTapped)
-//    }
-
 }

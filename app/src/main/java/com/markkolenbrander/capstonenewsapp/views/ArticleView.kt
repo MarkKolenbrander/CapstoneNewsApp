@@ -21,9 +21,7 @@ class ArticleView @JvmOverloads constructor  (
     fun setArticleData(article: Article){
         binding.tvSourceName.text = article.source.name
         binding.tvArticleTitle.text = article.title
-//        binding.tvArticleAuthor.text = article.author ?: ""
         binding.tvArticlePublishedAt.text = article.publishedAt ?: ""
-//        setOnDeleteTapped(onDeleteTapped)
 
         val imgView = binding.ivImgUrl
         val item = article.urlToImage
@@ -32,12 +30,5 @@ class ArticleView @JvmOverloads constructor  (
         }else{
             context?.let { Glide.with(it).load(item).into(imgView) }
         }
-
     }
-
-//    private fun setOnDeleteTapped(onDeleteTapped: () -> Unit){
-//        binding.ibDelete.setOnClickListener {
-//            onDeleteTapped()
-//        }
-//    }
 }

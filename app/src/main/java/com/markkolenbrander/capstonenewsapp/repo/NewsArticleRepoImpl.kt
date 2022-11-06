@@ -1,6 +1,5 @@
 package com.markkolenbrander.capstonenewsapp.repo
 
-import android.util.Log
 import com.markkolenbrander.capstonenewsapp.API_TOKEN
 import com.markkolenbrander.capstonenewsapp.database.dao.ArticleDao
 import com.markkolenbrander.capstonenewsapp.database.dao.SourceDao
@@ -32,7 +31,7 @@ class NewsArticleRepoImpl @Inject constructor(
             try {
                 if (networkStatusChecker.hasInternetConnection()){
                     val newsArticlesFromNetwork = newsApiService
-                        .getArticles(API_TOKEN, Country.NL, Category.GENERAL)
+                        .getArticles(API_TOKEN, Country.NL, Category.ENTERTAINMENT)
                         .articles
 
                     emit(CustomResult.Success(newsArticlesFromNetwork))
@@ -45,12 +44,10 @@ class NewsArticleRepoImpl @Inject constructor(
                         }
                     }
                 }else {
-                    Log.e(TAG, "No Internet" )
                     emit(CustomResult.NoInternet(newsArticlesFromLocalDb))
                 }
             }catch (e: Exception){
                 emit(CustomResult.Failure(e))
-                Log.e(TAG, e.toString())
             }
         }
     }
@@ -58,30 +55,4 @@ class NewsArticleRepoImpl @Inject constructor(
     override suspend fun searchArticles(search: String): List<Article> {
         return articleDao.searchArticles(search)
     }
-
-    companion object {
-        private const val TAG = "ArticleRepoImpl"
-    }
 }
-
-
-//With wifi check
-//try {
-//    if (prefStore.isWifiEnabled().first().not() || networkStatusChecker.isConnectedToWifi()){
-//
-//        val newsArticlesFromNetwork = newsApiService
-//            .getArticles(API_TOKEN, Country.NL, Category.GENERAL)
-//            .articles
-//
-//        emit(CustomResult.Success(newsArticlesFromNetwork))
-//
-//        if (newsArticlesFromNetwork.isNotEmpty()){
-//            articleDao.deleteArticles()
-//            articleDao.addArticles(newsArticlesFromNetwork)
-//            newsArticlesFromNetwork.forEach { article ->
-//                sourceDao.addSources(article.source)
-//            }
-//        }
-//    }else {
-//        Log.e(NewsArticleRepoImpl.TAG, "Not connected to WIFI")
-//    }

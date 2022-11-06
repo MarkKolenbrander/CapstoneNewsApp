@@ -16,20 +16,6 @@ private const val DATABASE_VERSION = 1
 @TypeConverters(DataConverter::class)
 abstract class NewsArticleDatabase : RoomDatabase() {
 
-//    companion object{
-//        private const val DATABASE_NAME = "NewsArticles"
-//
-//        fun buildDatabase(context: Context): NewsArticleDatabase {
-//            return Room.databaseBuilder(
-//                context,
-//                NewsArticleDatabase::class.java,
-//                DATABASE_NAME,
-//            )
-//                .allowMainThreadQueries()
-//                .build()
-//        }
-//    }
-
     abstract fun articleDao(): ArticleDao
 
     abstract fun sourceDao(): SourceDao

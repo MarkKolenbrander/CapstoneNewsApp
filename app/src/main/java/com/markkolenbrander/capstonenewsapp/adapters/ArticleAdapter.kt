@@ -6,12 +6,11 @@ import com.markkolenbrander.capstonenewsapp.models.Article
 import com.markkolenbrander.capstonenewsapp.views.ArticleView
 import com.markkolenbrander.capstonenewsapp.views.ArticleViewHolder
 
+//I changed this for an LazyColumn with Compose
 class ArticleAdapter(
     private val articlesList: List<Article?>,
     private val onArticleTapped: (Article) -> Unit,
 ) : RecyclerView.Adapter<ArticleViewHolder>() {
-
-//    private val articles = articlesList.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         val articleView = ArticleView(parent.context)
@@ -26,20 +25,10 @@ class ArticleAdapter(
         holder.itemView.setOnClickListener {
             articlesList[position]?.let { it1 -> onArticleTapped(it1) }
         }
-//        articlesList[position]?.let {
-//            holder.bindData(it) {
-//                removeArticleIndex(holder.absoluteAdapterPosition)
-//            }
-//        }
         articlesList[position]?.let { holder.bindData(it) }
     }
 
     override fun getItemCount(): Int {
         return articlesList.size
     }
-
-//    private fun removeArticleIndex(index: Int) {
-//        articlesList.removeAt(index)
-//        notifyItemRemoved(index)
-//    }
 }

@@ -36,11 +36,8 @@ object AppModule {
     @Provides
     fun provideSourceDao(db: NewsArticleDatabase) = db.sourceDao()
 
-
     @Provides
     fun provideSharedPreferences(@ApplicationContext context: Context) : SharedPreferences{
         return context.getSharedPreferences(STORE_NAME, Context.MODE_PRIVATE)
     }
-
-
 }

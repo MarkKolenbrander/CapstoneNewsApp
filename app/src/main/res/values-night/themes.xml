@@ -1,18 +1,38 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.CapstoneNewsApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.CapstoneNewsApp" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/blue_capstone</item>
         <item name="colorPrimaryVariant">@color/green_capstone</item>
-        <item name="colorOnPrimary">@color/white_capstone</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/yellow_capstone</item>
         <item name="colorSecondaryVariant">@color/grey_capstone</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
-
+        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@color/blue_capstone</item>
 
     </style>
+
+    <style name="AppBarTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <item name="colorControlActivated">@color/green_capstone</item>
+        <item name="colorControlNormal">@color/white</item>
+    </style>
+
+    <style name="SearchBarStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
+    <style name="DetailTextStyleHeader" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColor">@color/yellow_capstone</item>
+    </style>
+
+    <style name="DetailTextStyleContent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

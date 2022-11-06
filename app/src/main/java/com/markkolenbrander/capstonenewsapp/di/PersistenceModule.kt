@@ -15,13 +15,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class PersistenceModule {
 
     @Binds
-    @Singleton // lets de object life as long as the app does
+    @Singleton
     abstract fun bindPreferencesHelper(prefsStoreImpl: PrefsStoreImpl) : PrefsStore
 }
 
