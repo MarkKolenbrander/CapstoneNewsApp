@@ -16,7 +16,10 @@ const val BASE_URL = "https://newsapi.org/v2/"
 const val API_TOKEN = "9ced23497a9d4184bffbe366d3a804d7"
 
 @HiltViewModel
-class ArticleViewModel @Inject constructor(private val newsRepo: NewsArticleRepo, private val prefsStore: PrefsStore) : ViewModel() {
+class ArticleViewModel @Inject constructor(
+    private val newsRepo: NewsArticleRepo,
+    private val prefsStore: PrefsStore
+    ) : ViewModel() {
 
     class Factory(
         private val newsRepo: NewsArticleRepo,
@@ -34,7 +37,6 @@ class ArticleViewModel @Inject constructor(private val newsRepo: NewsArticleRepo
 
     fun fetchArticles() {
         viewModelScope.launch(IO) {
-//            Log.d("fetchArticles", "fetching")
             newsRepo
                 .getNewsArticles()
                 .onEach { newArticles ->
@@ -54,7 +56,6 @@ class ArticleViewModel @Inject constructor(private val newsRepo: NewsArticleRepo
     private val _articles = MutableLiveData<CustomResult<List<Article>>>()
     val articles: LiveData<CustomResult<List<Article>>> = _articles
 
-
     val darkThemeEnabled = prefsStore.isNightMode().asLiveData()
 
     fun toggleNightMode(){
@@ -62,13 +63,4 @@ class ArticleViewModel @Inject constructor(private val newsRepo: NewsArticleRepo
             prefsStore.toggleNightMode()
         }
     }
-
-//    val onlyWifiEnabled = prefsStore.isWifiEnabled().asLiveData()
-//
-//    fun downloadOverWifiOnly(){
-//        viewModelScope.launch {
-//            prefsStore.toggleDownloadOverWifiOnly()
-//        }
-//    }
-
 }

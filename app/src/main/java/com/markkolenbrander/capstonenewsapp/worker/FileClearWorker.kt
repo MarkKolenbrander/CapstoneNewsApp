@@ -8,7 +8,7 @@ class FileClearWorker (context: Context, workerParameters: WorkerParameters)
     : Worker(context, workerParameters) {
 
     override fun doWork(): Result {
-        val root = applicationContext.externalMediaDirs.first()
+        @Suppress("DEPRECATION") val root = applicationContext.externalMediaDirs.first()
 
         return try {
             root.listFiles()?.forEach { child ->

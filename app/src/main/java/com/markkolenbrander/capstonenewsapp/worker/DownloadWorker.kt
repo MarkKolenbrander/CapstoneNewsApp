@@ -25,8 +25,7 @@ class DownloadWorker(context: Context, workerParameters: WorkerParameters)
 
         val imagePath = "news_image_${System.currentTimeMillis()}.jpg"
         val inputStream = connection.inputStream
-        val file = File(applicationContext.externalMediaDirs.first(), imagePath)
-
+        @Suppress("DEPRECATION") val file = File(applicationContext.externalMediaDirs.first(), imagePath)
 
         val outputStream = FileOutputStream(file)
         outputStream.use { output ->
